@@ -1,0 +1,34 @@
+<!DOCTYOE html>
+<html>
+    <head>
+
+    </head>
+    <body>
+
+    <a href="#" data-trackingjs-on="click" data-trackingjs-category="ddd">test</a>
+
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script src="/scripts/adapter/ua.js"></script>
+    <script src="/scripts/trackingjs.js"></script>
+    <script type="text/javascript">
+        var trackingJS = new trackingJS({
+            type: 'ua',
+            analyticsCode: 'UA-57009541-1',
+            url: 'auto',
+            pageview: true
+            // ip
+        });
+
+        setTimeout(function() {
+            trackingJS.pageview('test/1', 'test title1');
+        }, 10000);
+
+        setTimeout(function() {
+            trackingJS.event('category', 'action', 'label', 'value');
+        }, 15000);
+
+
+        console.log(trackingJS);
+    </script>
+    </body>
+</html>

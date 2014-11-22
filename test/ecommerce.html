@@ -1,0 +1,44 @@
+<!DOCTYOE html>
+<html>
+<head>
+
+</head>
+<body>
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<script src="/scripts/adapter/ua.js"></script>
+<script src="/scripts/trackingjs.js"></script>
+<script type="text/javascript">
+    var trackingJS = new trackingJS({
+        type: 'ua',
+        analyticsCode: 'UA-57009541-1',
+        url: 'auto',
+        pageview: false
+    });
+
+    var ecTracking = trackingJS.registerEcommerce();
+    ecTracking.setId(1);
+    ecTracking.addItem({
+        id: '1',
+        name: 'Product 1',
+        sku: 'xyz-1',
+        category: 'Products Cat',
+        price: 11,
+        quantity: 1
+    });
+
+    ecTracking.addItem({
+        id: '2',
+        name: 'Product 2',
+        sku: 'xyz-2',
+        category: 'Products Cat',
+        price: 22,
+        quantity: 2
+    });
+
+    ecTracking.send();
+
+    console.log(ecTracking.getItems());
+</script>
+</body>
+</html>
