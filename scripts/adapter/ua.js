@@ -1,11 +1,15 @@
 
 var uaTrackingJS = function() {
-
     /**
      * initialize
      */
-    this.init = function (code, url, pageview) {
-        ga('create', code, url);
+    this.init = function (namespace, code, url, pageview) {
+        var options = {
+                name: namespace
+            };
+
+        ga('create', code, url, options);
+        ga('set', 'anonymizeIp', true);
         if(pageview === true) {
             this.pageview();
         }
@@ -36,8 +40,9 @@ var uaTrackingJS = function() {
  * @param page
  * @param title
  */
-uaTrackingJS.prototype.pageview = function(page, title) {
+uaTrackingJS.prototype.pageview = function(namespace, page, title) {
     var options = {};
+
 
     if(page) {
         options.page = page;
@@ -48,7 +53,7 @@ uaTrackingJS.prototype.pageview = function(page, title) {
     }
 
 
-    ga('send', 'pageview', options);
+    ga(namespace + '.send', 'pageview', options);
 };
 
 /**
@@ -59,7 +64,7 @@ uaTrackingJS.prototype.pageview = function(page, title) {
  * @param label
  * @param value
  */
-uaTrackingJS.prototype.event = function(category, action, label, value) {
+uaTrackingJS.prototype.event = function(namespace, category, action, label, value) {
     var options = {
         'hitType': 'event',
         eventCategory: category,
@@ -74,7 +79,7 @@ uaTrackingJS.prototype.event = function(category, action, label, value) {
         options.eventValue = value;
     }
 
-    ga('send', options);
+    ga(namespace + '.send', options);
 };
 
 /**
@@ -92,7 +97,7 @@ uaTrackingJS.prototype.eCommerce = {
         this.ec = ec;
         if(ec.transaction.id && ec.transaction.id != '') {
             //enable ecommerce
-            ga('require', 'ecommerce');
+            ga(this.trackingJS.getNamespace() + '.require', 'ecommerce');
             this.addTransaction();
             this.addItems();
             this.send();
@@ -121,7 +126,7 @@ uaTrackingJS.prototype.eCommerce = {
         }
 
 
-        ga('ecommerce:addTransaction', options);
+        ga(this.trackingJS.getNamespace() + '.ecommerce:addTransaction', options);
     },
 
     addItems: function() {
@@ -148,14 +153,14 @@ uaTrackingJS.prototype.eCommerce = {
                     options.quantity = item.quantity;
                 }
 
-                ga('ecommerce:addItem', options);
+                ga(this.trackingJS.getNamespace() + '.ecommerce:addItem', options);
             } else {
-                this.helper.error('ID and NAME of a item are required');
+                this.trackingJS.helper.error('ID and NAME of a item are required');
             }
-        });
+        }.bind(this));
     },
 
     send: function() {
-        ga('ecommerce:send');
+        ga(this.trackingJS.getNamespace() + '.ecommerce:send');
     }
 };
