@@ -63,7 +63,7 @@ var trackingJS = function(options) {
      * @author Dominik Matt <dma@massiveart.com>
      */
     this.event = function(category, action, label, value) {
-        this.helper.info('Send event:', category, action, label, value);
+        this.helper.info('Send event: ' + 'category: ' + category + ' / action: ' + action + ' / label: ' + label + ' / value: ' + value);
         this.tracking.event(category, action, label, value);
     }.bind(this);
 

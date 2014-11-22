@@ -16,22 +16,22 @@ First register a new trackingJS instance:
     });
 
 ###### sending pageview
-    trackingJS.pageview('test/1', 'test title1');
+    trackingJS.pageview('/page-url', 'Page title');
     
 ###### sending event
-    trackingJS.event('category', 'action', 'label', 'value');
+    trackingJS.event('category', 'action', 'label', 1);
     
 ### eCommerce
-register a new eCommerce Tracking instance
+###### register a new eCommerce Tracking instance
     var ecTracking = trackingJS.registerEcommerce();
     
-add transaction datas
+###### add transaction datas
     ecTracking.setId(1);
     ecTracking.setAffiliation('test store);
     ecTracking.setShipping(5);
     ecTracking.setTax(20);
 
-add a item
+###### add a item
     ecTracking.addItem({
         id: '1',
         name: 'Product 1',
@@ -41,5 +41,5 @@ add a item
         quantity: 1
     });
 
-at last you must send the eCommerce event
+###### at least you must send the eCommerce event
     ecTracking.send();

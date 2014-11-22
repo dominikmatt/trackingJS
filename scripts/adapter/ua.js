@@ -67,10 +67,10 @@ uaTrackingJS.prototype.event = function(category, action, label, value) {
     };
 
     if(label && label != '') {
-        options.label = label;
+        options.eventLabel = label;
     }
 
-    if(value && value != '') {
+    if(value && value != '' && !isNaN(value)) {
         options.eventValue = value;
     }
 

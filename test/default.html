@@ -9,23 +9,23 @@
 
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
     <script src="/scripts/adapter/ua.js"></script>
-    <script src="/scripts/trackingjs.js"></script>
+    <script src="/scripts/tracking.js"></script>
     <script type="text/javascript">
         var trackingJS = new trackingJS({
             type: 'ua',
             analyticsCode: 'UA-57009541-1',
             url: 'auto',
-            pageview: true
+            pageview: false
             // ip
         });
 
         setTimeout(function() {
-            trackingJS.pageview('test/1', 'test title1');
+            //trackingJS.pageview('test/1', 'test title1');
         }, 10000);
 
         setTimeout(function() {
-            trackingJS.event('category', 'action', 'label', 'value');
-        }, 15000);
+            trackingJS.event('category1', 'action', 'label', 1);
+        }, 1000);
 
 
         console.log(trackingJS);
