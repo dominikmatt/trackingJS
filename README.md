@@ -7,7 +7,7 @@ Include [jQuery](http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.j
     <script src="/tracking.js"></script>
 
 ### Default tracking
-First register a new trackingJS instance:
+###### First register a new trackingJS instance:
     var trackingJS = new trackingJS({
         type: 'ua',
         analyticsCode: 'UA-xxxxxxxx-1',
