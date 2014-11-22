@@ -7,7 +7,8 @@ var trackingJS = function(options) {
      *
      * @author Dominik Matt <dma@massiveart.com>
      */
-    settings = $.extend({
+    var settings = $.extend({
+        namespace: 'namespace',
         type: 'ua',
         analyticsCode: '',
         url: 'auto',
@@ -24,12 +25,16 @@ var trackingJS = function(options) {
         this.loadAdapter();
         if(this.tracking && typeof this.tracking == 'object') {
             this.tracking.appendAnalyticsJs();
-            this.tracking.init(settings.analyticsCode, settings.url, settings.pageview);
+            this.tracking.init(settings.namespace, settings.analyticsCode, settings.url, settings.pageview);
         } else {
             throw 'Tracking type not loaded';
         }
 
     }.bind(this);
+
+    this.getNamespace = function() {
+        return settings.namespace;
+    };
 
     /**
      * loadAdapter
@@ -54,7 +59,7 @@ var trackingJS = function(options) {
      * @author Dominik Matt <dma@massiveart.com>
      */
     this.pageview = function(page, title) {
-        this.tracking.pageview(page, title);
+        this.tracking.pageview(settings.namespace, page, title);
     }.bind(this);
 
     /**
@@ -64,7 +69,7 @@ var trackingJS = function(options) {
      */
     this.event = function(category, action, label, value) {
         this.helper.info('Send event: ' + 'category: ' + category + ' / action: ' + action + ' / label: ' + label + ' / value: ' + value);
-        this.tracking.event(category, action, label, value);
+        this.tracking.event(settings.namespace, category, action, label, value);
     }.bind(this);
 
     this.helper = {
@@ -99,7 +104,8 @@ var trackingJS = function(options) {
     return {
         pageview: this.pageview,
         event: this.event,
-        registerEcommerce: this.registerEcommerce
+        registerEcommerce: this.registerEcommerce,
+        getNamespace: this.getNamespace
     };
 
 };
@@ -121,6 +127,16 @@ trackingJS.prototype.eCommerce = function(trackingJS) {
     };
 
     this.items = [];
+
+    this.namepsace = '';
+
+    this.setNamespace = function(namepsace) {
+        this.namepsace = namepsace;
+    };
+
+    this.getNamespace = function() {
+        return this.namepsace;
+    };
 
     this.setId = function(id) {
         this.transaction.id = id;
