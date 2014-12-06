@@ -1,6 +1,7 @@
 var trackingJS = function(options) {
 
     this.tracking = null;
+    this.registeredEvents = [];
 
     /**
      * default settings
@@ -13,6 +14,7 @@ var trackingJS = function(options) {
         analyticsCode: '',
         url: 'auto',
         pageview: true,
+        dataName: 'trackingjs',
         debug: true
     }, options);
 
@@ -26,6 +28,7 @@ var trackingJS = function(options) {
         if(this.tracking && typeof this.tracking == 'object') {
             this.tracking.appendAnalyticsJs();
             this.tracking.init(settings.namespace, settings.analyticsCode, settings.url, settings.pageview);
+            this.registerEvents();
         } else {
             throw 'Tracking type not loaded';
         }
@@ -99,13 +102,90 @@ var trackingJS = function(options) {
         }
     }.bind(this);
 
+    /**
+     * get all registerd events
+     *
+     * @type {function(this:trackingJS)}
+     */
+    this.getEvents = function() {
+        $events = $('*[data-' + settings.dataName + ']');
+        return $events;
+    }.bind(this);
+
+    /**
+     *
+     * @type {function(this:trackingJS)}
+     */
+    this.registerEvents = function() {
+        var $events = this.getEvents(),
+            data = null;
+
+        // each all events
+        $events.each(function(key, el) {
+            var $el = $(el),
+                data = $el.data(settings.dataName);
+
+            //check if data-trackingjs is a object and have a event (click, mouseover, touch)
+            if(typeof data == 'object' && data.event) {
+
+                //register event
+                this.registeredEvents.push($el);
+                $el.bind(data.event + '.trackingJS', function() {
+                    //get current data
+                    var sendData = $el.data(settings.dataName);
+                    if(!typeof sendData == 'object') {
+                        sendData = $.parseJSON(sendData);
+                    }
+                    this.event(sendData.category, sendData.action, sendData.label, sendData.value);
+                }.bind(this));
+
+
+            } else {
+                this.helper.info('Wrong data to register Tracking event.');
+            }
+
+        }.bind(this));
+    }.bind(this);
+
+    /**
+     * returns all registered events on the browser console
+     *
+     * @type {function(this:trackingJS)}
+     */
+    this.viewAllEvents = function() {
+        $.each(this.registeredEvents, function(key, el) {
+            var $el = $(el),
+                sendData = $el.data(settings.dataName);
+            if(!typeof sendData == 'object') {
+                sendData = $.parseJSON(sendData);
+            }
+
+            console.log('########## trackingJS event');
+            console.log($el.context);
+            console.log('Send event on ' + sendData.event + ': ' + 'category: ' + sendData.category + ' / action: ' + sendData.action + ' / label: ' + sendData.label + ' / value: ' + sendData.value)
+        }.bind(this));
+    }.bind(this);
+
+    /**
+     * updates all events when you change the event type
+     *
+     * @type {function(this:trackingJS)}
+     */
+    this.updateEvents = function() {
+        //reset registered events
+        this.registeredEvents = [];
+        this.registerEvents();
+    }.bind(this);
+
     this.init();
 
     return {
         pageview: this.pageview,
         event: this.event,
         registerEcommerce: this.registerEcommerce,
-        getNamespace: this.getNamespace
+        getNamespace: this.getNamespace,
+        viewAllEvents: this.viewAllEvents,
+        updateEvents: this.updateEvents
     };
 
 };
