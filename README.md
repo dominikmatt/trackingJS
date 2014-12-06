@@ -1,6 +1,11 @@
 #USAGE
 
 ### Installation
+
+```bash
+$ bower install tracking-js
+```
+
 Include [jQuery](http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js) `tracking.js` and `adapter/ua.js` scripts:
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
     <script src="/adapter/ua.js"></script>
