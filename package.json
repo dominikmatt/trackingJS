@@ -1,0 +1,10 @@
+{
+    "name": "TrackingJS",
+    "description": "Google Analytics TrackingJS",
+    "author": "Dominik Matt <mail@matt-dominik.at>",
+    "dependencies": {
+    },
+    "devDependencies": {
+        "express": "^4.10.4"
+    }
+}

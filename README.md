@@ -8,19 +8,65 @@ Include [jQuery](http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.j
 
 ### Default tracking
 ###### First register a new trackingJS instance:
-    var trackingJS = new trackingJS({
-        type: 'ua',
-        analyticsCode: 'UA-xxxxxxxx-1',
-        url: 'auto',
-        pageview: false
-    });
+```js
+var trackingJS = new trackingJS({
+    type: 'ua',
+    analyticsCode: 'UA-xxxxxxxx-1',
+    url: 'auto',
+    pageview: false
+});
+```
 
 ###### sending pageview
-    trackingJS.pageview('/page-url', 'Page title');
-    
+```js
+trackingJS.pageview('/page-url', 'Page title');
+```
+
 ###### sending event
-    trackingJS.event('category', 'action', 'label', 1);
-    
+```js
+trackingJS.event('category', 'action', 'label', 1);
+```
+
+###### register event`
+use 'data-trackingjs' attribut to register an event.
+'event' (required)
+'category' (required)
+'action'
+'label'
+'value'
+
+```html
+<a href="#" data-trackingjs='{"event":"click", "category":"category", "action":"action", "label":"label", "value":"1"}'>click to send event</a>
+```
+
+to update event data use the jQuery [.data](http://api.jquery.com/jquery.data/) method and sen them an javascript object like:
+```js
+var newEventData = {
+    event: 'click',
+    category: 'category',
+    action: 'action',
+    label: 'label',
+    value: 1
+};
+
+$('a').data('trackingjs', newEventData);
+```
+
+to update the event type (e.g. from click to mouseover) use the updateEvents command
+```js
+var newEventData = {
+    event: 'mouseover',
+    category: 'category',
+    action: 'action',
+    label: 'label',
+    value: 1
+};
+
+$('a').data('trackingjs', newEventData);
+
+trackingJS.updateEvents();
+```
+
 ### eCommerce
 ###### register a new eCommerce Tracking instance
     var ecTracking = trackingJS.registerEcommerce();
