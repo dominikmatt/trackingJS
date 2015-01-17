@@ -15,20 +15,16 @@
             type: 'ua',
             analyticsCode: 'UA-57009541-1',
             url: 'auto',
-            pageview: false
-            // ip
+            pageview: false,
+            anonymizeIp: false
         });
 
-        setTimeout(function() {
-            //trackingJS.pageview('test/1', 'test title1');
-        }, 10000);
 
-        setTimeout(function() {
-            trackingJS.event('category1', 'action', 'label', 1);
-        }, 1000);
+        trackingJS.pageview('test/1', 'test title1');
+
+        trackingJS.event('category1', 'action', 'label', 1);
 
 
-        console.log(trackingJS);
     </script>
     </body>
 </html>

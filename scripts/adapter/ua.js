@@ -1,5 +1,5 @@
 
-var uaTrackingJS = function() {
+var uaTrackingJS = function(trackingJSOptions, trackingJSHelper) {
     /**
      * initialize
      */
@@ -9,7 +9,14 @@ var uaTrackingJS = function() {
             };
 
         ga('create', code, url, options);
-        ga('set', 'anonymizeIp', true);
+
+        if(trackingJSOptions.anonymizeIp === true) {
+            trackingJSHelper.info(options.name + ' ip is anonymous');
+            ga('set', 'anonymizeIp', true);
+        } else {
+            trackingJSHelper.info(options.name + ' ip is not anonymous');
+        }
+
         if(pageview === true) {
             this.pageview();
         }
