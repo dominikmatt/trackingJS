@@ -15,7 +15,8 @@ var trackingJS = function(options) {
         url: 'auto',
         pageview: true,
         dataName: 'trackingjs',
-        debug: true
+        debug: true,
+        anonymizeIp: false
     }, options);
 
     /**
@@ -23,8 +24,12 @@ var trackingJS = function(options) {
      *
      * @author Dominik Matt <dma@massiveart.com>
      */
-    this.init = function() {
-        this.loadAdapter();
+    var init = function() {
+        this.namespace = settings.namepsace;
+
+        checkDebug();
+
+        loadAdapter();
         if(this.tracking && typeof this.tracking == 'object') {
             this.tracking.appendAnalyticsJs();
             this.tracking.init(settings.namespace, settings.analyticsCode, settings.url, settings.pageview);
@@ -35,8 +40,31 @@ var trackingJS = function(options) {
 
     }.bind(this);
 
-    this.getNamespace = function() {
-        return settings.namespace;
+    /**
+     * @method getSetting
+     *
+     * @author Dominik Matt <dma@massiveart.com>
+     *
+     * @param key
+     * @returns {*}
+     */
+    this.getSetting = function(key) {
+        if(settings[key]) {
+            return settings[key];
+        }
+    };
+
+    /**
+     * set the debug param to true if has "#trackingJSDebug" is set in the url
+     *
+     * @method checkDebug
+     *
+     * @author Dominik Matt <dma@massiveart.com>
+     */
+    var checkDebug = function() {
+        if(location.hash == '#trackingJSDebug') {
+            settings.debug = true;
+        }
     };
 
     /**
@@ -44,11 +72,11 @@ var trackingJS = function(options) {
      *
      * @author Dominik Matt <dma@massiveart.com>
      */
-    this.loadAdapter = function() {
+    var loadAdapter = function() {
         if(settings.type != '') {
             var className = settings.type + 'TrackingJS'
             if(typeof window[className] == 'function') {
-                this.tracking = new window[className]();
+                this.tracking = new window[className](settings, this.helper);
                 return true;
             }
         }
@@ -56,58 +84,36 @@ var trackingJS = function(options) {
         return false;
     }.bind(this);
 
-    /**
-     * pageview
-     *
-     * @author Dominik Matt <dma@massiveart.com>
-     */
-    this.pageview = function(page, title) {
-        this.tracking.pageview(settings.namespace, page, title);
-    }.bind(this);
 
-    /**
-     * event
-     *
-     * @author Dominik Matt <dma@massiveart.com>
-     */
-    this.event = function(category, action, label, value) {
-        this.helper.info('Send event: ' + 'category: ' + category + ' / action: ' + action + ' / label: ' + label + ' / value: ' + value);
-        this.tracking.event(settings.namespace, category, action, label, value);
-    }.bind(this);
 
     this.helper = {
-        error: function(msg){
-            console.error('trackingJS: ' + msg);
+        error: function(msg, isObject) {
+            if(isObject) {
+                console.error(msg);
+            } else {
+                console.error('trackingJS: ' + msg);
+            }
         },
 
-        info: function(msg){
+        info: function(msg, isObject){
             if(settings.debug) {
-                console.info('trackingJS: ' + msg);
+                if(isObject) {
+                    console.info(msg);
+                } else {
+                    console.info('trackingJS: ' + msg);
+                }
             }
         }
     };
 
-    /**
-     * register eCommerce Plugin
-     *
-     * @type {function(this:trackingJS)}
-     */
-    this.registerEcommerce = function() {
-        if(typeof this.eCommerce == 'function') {
-            this.helper.info('Register eCommerce tracking');
-            return new this.eCommerce(this);
-        } else {
-            this.helper.error('eCommerce plugin not found');
-            return false;
-        }
-    }.bind(this);
+
 
     /**
      * get all registerd events
      *
      * @type {function(this:trackingJS)}
      */
-    this.getEvents = function() {
+    var getEvents = function() {
         $events = $('*[data-' + settings.dataName + ']');
         return $events;
     }.bind(this);
@@ -117,7 +123,7 @@ var trackingJS = function(options) {
      * @type {function(this:trackingJS)}
      */
     this.registerEvents = function() {
-        var $events = this.getEvents(),
+        var $events = getEvents(),
             data = null;
 
         // each all events
@@ -147,48 +153,94 @@ var trackingJS = function(options) {
         }.bind(this));
     }.bind(this);
 
-    /**
-     * returns all registered events on the browser console
-     *
-     * @type {function(this:trackingJS)}
-     */
-    this.viewAllEvents = function() {
-        $.each(this.registeredEvents, function(key, el) {
-            var $el = $(el),
-                sendData = $el.data(settings.dataName);
-            if(!typeof sendData == 'object') {
-                sendData = $.parseJSON(sendData);
-            }
 
-            console.log('########## trackingJS event');
-            console.log($el.context);
-            console.log('Send event on ' + sendData.event + ': ' + 'category: ' + sendData.category + ' / action: ' + sendData.action + ' / label: ' + sendData.label + ' / value: ' + sendData.value)
-        }.bind(this));
-    }.bind(this);
 
-    /**
-     * updates all events when you change the event type
-     *
-     * @type {function(this:trackingJS)}
-     */
-    this.updateEvents = function() {
-        //reset registered events
-        this.registeredEvents = [];
-        this.registerEvents();
-    }.bind(this);
-
-    this.init();
-
-    return {
-        pageview: this.pageview,
-        event: this.event,
-        registerEcommerce: this.registerEcommerce,
-        getNamespace: this.getNamespace,
-        viewAllEvents: this.viewAllEvents,
-        updateEvents: this.updateEvents
-    };
-
+    init();
 };
+
+/**
+ * @method pageview
+ *
+ * @author Dominik Matt <dma@massiveart.com>
+ */
+trackingJS.prototype.pageview = function(page, title) {
+    this.tracking.pageview(this.getNamespace(), page, title);
+};
+
+/**
+ * @method event
+ *
+ * @author Dominik Matt <dma@massiveart.com>
+ */
+trackingJS.prototype.event = function(category, action, label, value) {
+    this.helper.info('Send event: ' + 'category: ' + category + ' / action: ' + action + ' / label: ' + label + ' / value: ' + value);
+    this.tracking.event(this.getNamespace(), category, action, label, value);
+};
+
+/**
+ * register eCommerce Plugin
+ *
+ * @method registerEcomerce
+ *
+ * @author Dominik Matt <dma@massiveart.com>
+ *
+ * @type {function(this:trackingJS)}
+ */
+trackingJS.prototype.registerEcommerce = function() {
+    if(typeof this.eCommerce == 'function') {
+        this.helper.info('Register eCommerce tracking');
+        return new this.eCommerce(this);
+    } else {
+        this.helper.error('eCommerce plugin not found');
+        return false;
+    }
+};
+
+/**
+ * returns all registered events on the browser console
+ *
+ * @method viewAllEvents
+ *
+ * @author Dominik Matt <dma@massiveart.com>
+ *
+ * @type {function(this:trackingJS)}
+ */
+trackingJS.prototype.viewAllEvents = function() {
+    $.each(this.registeredEvents, function(key, el) {
+        var $el = $(el),
+            sendData = $el.data(this.getSetting('dataName'));
+
+        if(!typeof sendData == 'object') {
+            sendData = $.parseJSON(sendData);
+        }
+
+        console.log('########## trackingJS event');
+        console.log($el.context);
+        console.log('Send event on ' + sendData.event + ': ' + 'category: ' + sendData.category + ' / action: ' + sendData.action + ' / label: ' + sendData.label + ' / value: ' + sendData.value)
+    }.bind(this));
+};
+
+/**
+ * updates all events when you change the event type
+ *
+ * @method updateEvents
+ *
+ * @author Dominik Matt <dma@massiveart.com>
+ *
+ * @type {function(this:trackingJS)}
+ */
+trackingJS.prototype.updateEvents = function() {
+    //reset registered events
+    this.registeredEvents = [];
+    this.registerEvents();
+};
+
+trackingJS.prototype.getNamespace = function() {
+    return this.namespace;
+};
+
+
+
 
 /**
  * eCommerce plugin
@@ -246,7 +298,8 @@ trackingJS.prototype.eCommerce = function(trackingJS) {
     };
 
     this.addItem = function(item) {
-        trackingJS.helper.info('Add item to ecommerce:', item);
+        trackingJS.helper.info('Add item to ecommerce:');
+        trackingJS.helper.info(item, true);
         if(typeof item == 'object') {
             this.items.push(item);
         } else {
