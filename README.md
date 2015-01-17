@@ -11,15 +11,57 @@ Include [jQuery](http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.j
     <script src="/adapter/ua.js"></script>
     <script src="/tracking.js"></script>
 
+
+
+##Properties
+###namespace:
+*Default: (string) namespace
+namespace for the tracking code. Need it for multiTrack
+
+
+###type
+*Default: (string) ua
+adapter type (ua = Universal Analytics
+
+
+###analyticsCode
+*Default: (string)
+for the ua adapter we need the google analytics code
+
+###url
+*Default: (string) auto
+url of your page or auto
+
+
+###pageview
+*Default: (boolean) true
+send pageview on page loaded
+
+###dataName
+*Default: (string) trackingjs
+is for the event register we can set on the default on data-trackingjs=""
+
+
+###debug
+*Default: (boolean) true
+view debug messages
+
+###anonymizeIp
+*Default: (boolean) false
+(boolean) false | on true the ip will be anonymous
+
+##Using
+
 ### Default tracking
 ###### First register a new trackingJS instance:
 ```js
-var trackingJS = new trackingJS({
+var options = {
     type: 'ua',
     analyticsCode: 'UA-xxxxxxxx-1',
     url: 'auto',
     pageview: false
-});
+}; //view properties
+var trackingJS = new trackingJS(options);
 ```
 
 ###### sending pageview
@@ -66,6 +108,7 @@ var newEventData = {
     label: 'label',
     value: 1
 };
+```
 
 $('a').data('trackingjs', newEventData);
 
@@ -74,15 +117,20 @@ trackingJS.updateEvents();
 
 ### eCommerce
 ###### register a new eCommerce Tracking instance
+```js
     var ecTracking = trackingJS.registerEcommerce();
-    
+```
+
 ###### add transaction datas
+```js
     ecTracking.setId(1);
     ecTracking.setAffiliation('test store);
     ecTracking.setShipping(5);
     ecTracking.setTax(20);
+```
 
 ###### add a item
+```js
     ecTracking.addItem({
         id: '1',
         name: 'Product 1',
@@ -91,17 +139,22 @@ trackingJS.updateEvents();
         price: 11.00,
         quantity: 1
     });
+```
 
 ###### at least you must send the eCommerce event
+```js
     ecTracking.send();
-
+```
 
 ### multiTracking
 Include `multiTrack.js` script:
-	<script src="/scripts/multiTrack.js"></script>
+```html
+    <script src="/scripts/multiTrack.js"></script>
+```
 
 ###### Register your Tracking instances
-	var trackingJSone = new trackingJS({
+```js
+    var trackingJSone = new trackingJS({
         namespace: 'one',
         type: 'ua',
         analyticsCode: 'UA-xxxxxxxx-1',
@@ -119,32 +172,39 @@ Include `multiTrack.js` script:
 
     multiTrackJS.register(trackingJSone);
     multiTrackJS.register(trackingJStwo);
+```
 
 ###### send pageview
-	multiTrackJS.pageview('test/multi', 'only UA-xxxxxxxxx-1 and UA-xxxxxxxxx-2');
+```js
+    multiTrackJS.pageview('test/multi', 'only UA-xxxxxxxxx-1 and UA-xxxxxxxxx-2');
+```
 
 ###### send event
-	multiTrackJS.event('category1', 'action', 'label', 1);
+```js
+    multiTrackJS.event('category1', 'action', 'label', 1);
+```
 
 ###### its simple to use eCommerce Tracking on multiTrack
-	var multiEcTrack = new multiTrackJS.registerEcommerce();
-	    multiEcTrack.setId(1);
-	    multiEcTrack.addItem({
-	        id: '1',
-	        name: 'Product 1',
-	        sku: 'xyz-1',
-	        category: 'Products Cat',
-	        price: 11,
-	        quantity: 1
-	    });
+```js
+    var multiEcTrack = new multiTrackJS.registerEcommerce();
+        multiEcTrack.setId(1);
+        multiEcTrack.addItem({
+            id: '1',
+            name: 'Product 1',
+            sku: 'xyz-1',
+            category: 'Products Cat',
+            price: 11,
+            quantity: 1
+        });
 
-	    multiEcTrack.addItem({
-	        id: '2',
-	        name: 'Product 2',
-	        sku: 'xyz-2',
-	        category: 'Products Cat',
-	        price: 22,
-	        quantity: 2
-	    });
+        multiEcTrack.addItem({
+            id: '2',
+            name: 'Product 2',
+            sku: 'xyz-2',
+            category: 'Products Cat',
+            price: 22,
+            quantity: 2
+        });
 
-	    multiEcTrack.send();
+        multiEcTrack.send();
+```
