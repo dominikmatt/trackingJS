@@ -25,7 +25,7 @@ var trackingJS = function(options) {
      * @author Dominik Matt <dma@massiveart.com>
      */
     var init = function() {
-        this.namespace = settings.namepsace;
+        this.namespace = settings.namespace;
 
         checkDebug();
 

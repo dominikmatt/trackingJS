@@ -18,7 +18,7 @@ var uaTrackingJS = function(trackingJSOptions, trackingJSHelper) {
         }
 
         if(pageview === true) {
-            this.pageview();
+            this.pageview(options.name);
         }
     }.bind(this),
 
