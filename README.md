@@ -96,7 +96,7 @@ var newEventData = {
     value: 1
 };
 
-$('a').data('trackingjs', newEventData);
+$('a').attr('data-trackingjs', JSON.stringify(newEventData));
 ```
 
 to update the event type (e.g. from click to mouseover) use the updateEvents command
@@ -110,7 +110,7 @@ var newEventData = {
 };
 ```
 
-$('a').data('trackingjs', newEventData);
+$('a').attr('data-trackingjs', JSON.stringify(newEventData));
 
 trackingJS.updateEvents();
 ```
