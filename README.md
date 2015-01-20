@@ -85,6 +85,18 @@ use 'data-trackingjs' attribut to register an event.
 ```html
 <a href="#" data-trackingjs='{"event":"click", "category":"category", "action":"action", "label":"label", "value":"1"}'>click to send event</a>
 ```
+####### use in twig
+```html
+{% set trackOption = {
+            'event': 'click',
+            'category': 'category name',
+            'action': 'action name',
+            'label': 'label name',
+            'value': 1
+        } 
+%}
+<a href="#" data-trackingjs='{{ trackOption|json_encode() }}'>click to send event</a>
+```
 
 to update event data use the jQuery [.data](http://api.jquery.com/jquery.data/) method and sen them an javascript object like:
 ```js
@@ -108,7 +120,6 @@ var newEventData = {
     label: 'label',
     value: 1
 };
-```
 
 $('a').data('trackingjs', newEventData);
 
