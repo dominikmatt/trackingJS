@@ -93,9 +93,9 @@ use 'data-trackingjs' attribut to register an event.
             'action': 'action name',
             'label': 'label name',
             'value': 1
-        } 
+        }
 %}
-<a href="#" data-trackingjs='{{ trackOption|json_encode() }}'>click to send event</a>
+<a href="#" data-trackingjs='{{ trackOption|json_encode()|e }}'>click to send event</a>
 ```
 
 to update event data use the jQuery [.data](http://api.jquery.com/jquery.data/) method and sen them an javascript object like:
