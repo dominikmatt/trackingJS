@@ -124,7 +124,7 @@ trackingJS.updateEvents();
 ###### add transaction datas
 ```js
     ecTracking.setId(1);
-    ecTracking.setAffiliation('test store);
+    ecTracking.setAffiliation('test store');
     ecTracking.setShipping(5);
     ecTracking.setTax(20);
 ```
