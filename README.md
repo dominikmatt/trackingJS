@@ -15,39 +15,39 @@ Include [jQuery](http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.j
 
 ##Properties
 ###namespace:
-*Default: (string) namespace
+*Default*: (string) namespace              
 namespace for the tracking code. Need it for multiTrack
 
 
 ###type
-*Default: (string) ua
+*Default*: (string) ua   
 adapter type (ua = Universal Analytics
 
 
 ###analyticsCode
-*Default: (string)
+*Default*: (string)  
 for the ua adapter we need the google analytics code
 
 ###url
-*Default: (string) auto
+*Default*: (string) auto  
 url of your page or auto
 
 
 ###pageview
-*Default: (boolean) true
+*Default*: (boolean) true  
 send pageview on page loaded
 
 ###dataName
-*Default: (string) trackingjs
+*Default*: (string) trackingjs  
 is for the event register we can set on the default on data-trackingjs=""
 
 
 ###debug
-*Default: (boolean) true
+*Default*: (boolean) true  
 view debug messages
 
 ###anonymizeIp
-*Default: (boolean) false
+*Default*: (boolean) false  
 (boolean) false | on true the ip will be anonymous
 
 ##Using
@@ -74,16 +74,28 @@ trackingJS.pageview('/page-url', 'Page title');
 trackingJS.event('category', 'action', 'label', 1);
 ```
 
-###### register event`
+###### register event
 use 'data-trackingjs' attribut to register an event.
 'event' (required)
 'category' (required)
-'action'
-'label'
-'value'
+'action' (required)
+'label' (optional)
+'value' (optional)
 
 ```html
 <a href="#" data-trackingjs='{"event":"click", "category":"category", "action":"action", "label":"label", "value":"1"}'>click to send event</a>
+```
+####### use in twig
+```html
+{% set trackOption = {
+            'event': 'click',
+            'category': 'category name',
+            'action': 'action name',
+            'label': 'label name',
+            'value': 1 //optional
+        }
+%}
+<a href="#" data-trackingjs='{{ trackOption|json_encode()|e }}'>click to send event</a>
 ```
 
 to update event data use the jQuery [.data](http://api.jquery.com/jquery.data/) method and sen them an javascript object like:
@@ -93,7 +105,7 @@ var newEventData = {
     category: 'category',
     action: 'action',
     label: 'label',
-    value: 1
+    value: 1 //optional
 };
 
 $('a').attr('data-trackingjs', JSON.stringify(newEventData));
@@ -106,9 +118,9 @@ var newEventData = {
     category: 'category',
     action: 'action',
     label: 'label',
-    value: 1
+    value: 1 //optional
 };
-```
+
 
 $('a').attr('data-trackingjs', JSON.stringify(newEventData));
 
