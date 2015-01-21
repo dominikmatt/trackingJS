@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>trackingJS event bundle</title>
+</head>
+<body>
+    <a href="test/test.pdf" data-trackingjs-download="true">Download Bundle</a>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script src="/scripts/adapter/ua.js"></script>
+    <script src="/scripts/tracking.js"></script>
+    <script src="/scripts/eventBundle/downloadBundle.js"></script>
+    <script type="text/javascript">
+        var trackingJS = new trackingJS({
+            type: 'ua',
+            analyticsCode: 'UA-57009541-1',
+            url: 'auto',
+            pageview: false,
+            anonymizeIp: false,
+            eventBundles: ['downloads', 'test']
+        });
+
+
+        trackingJS.pageview('test/1', 'test title1');
+
+        trackingJS.event('category1', 'action', 'label', 1);
+
+
+    </script>
+</body>
+</html>

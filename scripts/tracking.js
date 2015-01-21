@@ -16,7 +16,8 @@ var trackingJS = function(options) {
         pageview: true,
         dataName: 'trackingjs',
         debug: true,
-        anonymizeIp: false
+        anonymizeIp: false,
+        eventBundles: []
     }, options);
 
     /**
@@ -30,6 +31,7 @@ var trackingJS = function(options) {
         checkDebug();
 
         loadAdapter();
+        loadEventBundels();
         if(this.tracking && typeof this.tracking == 'object') {
             this.tracking.appendAnalyticsJs();
             this.tracking.init(settings.namespace, settings.analyticsCode, settings.url, settings.pageview);
@@ -153,6 +155,17 @@ var trackingJS = function(options) {
         }.bind(this));
     }.bind(this);
 
+    var loadEventBundels = function() {
+        if(settings.eventBundles && typeof settings.eventBundles == 'object' && settings.eventBundles.length > 0) {
+            for(var key in settings.eventBundles) {
+                var bundleName = settings.eventBundles[key];
+                if(this.eventBundles[bundleName]) {
+                    var bundle = new this.eventBundles[bundleName]();
+                    bundle.init();
+                }
+            }
+        }
+    }.bind(this);
 
 
     init();
@@ -323,6 +336,7 @@ trackingJS.prototype.eCommerce.prototype.getItems = function() {
     return this.items;
 };
 
+trackingJS.prototype.eventBundles = {};
 
 
 
