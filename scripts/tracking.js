@@ -162,6 +162,11 @@ var trackingJS = function(options) {
                 if(this.eventBundles[bundleName]) {
                     var bundle = new this.eventBundles[bundleName]();
                     bundle.init();
+                    bundle.select(function($el) {
+                        if($el && $el.length > 0) {
+                            console.log($el);
+                        }
+                    });
                 }
             }
         }
