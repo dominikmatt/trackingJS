@@ -78,9 +78,9 @@ trackingJS.event('category', 'action', 'label', 1);
 use 'data-trackingjs' attribut to register an event.
 'event' (required)
 'category' (required)
-'action'
-'label'
-'value'
+'action' (required)
+'label' (optional)
+'value' (optional)
 
 ```html
 <a href="#" data-trackingjs='{"event":"click", "category":"category", "action":"action", "label":"label", "value":"1"}'>click to send event</a>
@@ -92,7 +92,7 @@ use 'data-trackingjs' attribut to register an event.
             'category': 'category name',
             'action': 'action name',
             'label': 'label name',
-            'value': 1
+            'value': 1 //optional
         }
 %}
 <a href="#" data-trackingjs='{{ trackOption|json_encode()|e }}'>click to send event</a>
@@ -105,7 +105,7 @@ var newEventData = {
     category: 'category',
     action: 'action',
     label: 'label',
-    value: 1
+    value: 1 //optional
 };
 
 $('a').attr('data-trackingjs', JSON.stringify(newEventData));
@@ -118,7 +118,7 @@ var newEventData = {
     category: 'category',
     action: 'action',
     label: 'label',
-    value: 1
+    value: 1 //optional
 };
 
 
