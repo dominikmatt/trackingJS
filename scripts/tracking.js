@@ -1,4 +1,4 @@
-var trackingJS = function(options) {
+var trackingJS = function (options) {
 
     this.tracking = null;
     this.registeredEvents = [];
@@ -17,7 +17,10 @@ var trackingJS = function(options) {
         dataName: 'trackingjs',
         debug: true,
         anonymizeIp: false,
-        eventBundles: []
+        eventBundle: {
+            path: '/scripts/eventBundle/',
+            load: []
+        }
     }, options);
 
     /**
@@ -25,14 +28,14 @@ var trackingJS = function(options) {
      *
      * @author Dominik Matt <dma@massiveart.com>
      */
-    var init = function() {
+    var init = function () {
         this.namespace = settings.namespace;
 
         checkDebug();
 
         loadAdapter();
         loadEventBundels();
-        if(this.tracking && typeof this.tracking == 'object') {
+        if (this.tracking && typeof this.tracking == 'object') {
             this.tracking.appendAnalyticsJs();
             this.tracking.init(settings.namespace, settings.analyticsCode, settings.url, settings.pageview);
             this.registerEvents();
@@ -50,8 +53,8 @@ var trackingJS = function(options) {
      * @param key
      * @returns {*}
      */
-    this.getSetting = function(key) {
-        if(settings[key]) {
+    this.getSetting = function (key) {
+        if (settings[key]) {
             return settings[key];
         }
     };
@@ -63,8 +66,8 @@ var trackingJS = function(options) {
      *
      * @author Dominik Matt <dma@massiveart.com>
      */
-    var checkDebug = function() {
-        if(location.hash == '#trackingJSDebug') {
+    var checkDebug = function () {
+        if (location.hash == '#trackingJSDebug') {
             settings.debug = true;
         }
     };
@@ -74,10 +77,10 @@ var trackingJS = function(options) {
      *
      * @author Dominik Matt <dma@massiveart.com>
      */
-    var loadAdapter = function() {
-        if(settings.type != '') {
+    var loadAdapter = function () {
+        if (settings.type != '') {
             var className = settings.type + 'TrackingJS'
-            if(typeof window[className] == 'function') {
+            if (typeof window[className] == 'function') {
                 this.tracking = new window[className](settings, this.helper);
                 return true;
             }
@@ -87,19 +90,18 @@ var trackingJS = function(options) {
     }.bind(this);
 
 
-
     this.helper = {
-        error: function(msg, isObject) {
-            if(isObject) {
+        error: function (msg, isObject) {
+            if (isObject) {
                 console.error(msg);
             } else {
                 console.error('trackingJS: ' + msg);
             }
         },
 
-        info: function(msg, isObject){
-            if(settings.debug) {
-                if(isObject) {
+        info: function (msg, isObject) {
+            if (settings.debug) {
+                if (isObject) {
                     console.info(msg);
                 } else {
                     console.info('trackingJS: ' + msg);
@@ -109,13 +111,12 @@ var trackingJS = function(options) {
     };
 
 
-
     /**
      * get all registerd events
      *
      * @type {function(this:trackingJS)}
      */
-    var getEvents = function() {
+    var getEvents = function () {
         $events = $('*[data-' + settings.dataName + ']');
         return $events;
     }.bind(this);
@@ -124,24 +125,24 @@ var trackingJS = function(options) {
      *
      * @type {function(this:trackingJS)}
      */
-    this.registerEvents = function() {
+    this.registerEvents = function () {
         var $events = getEvents(),
             data = null;
 
         // each all events
-        $events.each(function(key, el) {
+        $events.each(function (key, el) {
             var $el = $(el),
                 data = $el.data(settings.dataName);
 
             //check if data-trackingjs is a object and have a event (click, mouseover, touch)
-            if(typeof data == 'object' && data.event) {
+            if (typeof data == 'object' && data.event) {
 
                 //register event
                 this.registeredEvents.push($el);
-                $el.bind(data.event + '.trackingJS', function() {
+                $el.bind(data.event + '.trackingJS', function () {
                     //get current data
                     var sendData = $el.data(settings.dataName);
-                    if(!typeof sendData == 'object') {
+                    if (!typeof sendData == 'object') {
                         sendData = $.parseJSON(sendData);
                     }
                     this.event(sendData.category, sendData.action, sendData.label, sendData.value);
@@ -155,20 +156,38 @@ var trackingJS = function(options) {
         }.bind(this));
     }.bind(this);
 
-    var loadEventBundels = function() {
-        if(settings.eventBundles && typeof settings.eventBundles == 'object' && settings.eventBundles.length > 0) {
-            for(var key in settings.eventBundles) {
-                var bundleName = settings.eventBundles[key];
-                if(this.eventBundles[bundleName]) {
-                    var bundle = new this.eventBundles[bundleName]();
-                    bundle.init();
-                    bundle.select(function($el) {
-                        if($el && $el.length > 0) {
-                            console.log($el);
-                        }
-                    });
+    var loadEventBundels = function () {
+        if (settings.eventBundle && typeof settings.eventBundle == 'object' && settings.eventBundle.load.length > 0) {
+            for (var key in settings.eventBundle.load) {
+                var bundleName = settings.eventBundle.load[key];
+                if (!settings.eventBundle.path == '' && !settings.eventBundle.path == false) {
+
+                    var script= document.createElement('script');
+                    script.type= 'text/javascript';
+                    script.src=  settings.eventBundle.path + bundleName + 'Bundle.js';
+                    script.async = false;
+                    script.onload = function() {
+                        initializeNewBundel(bundleName);
+                    };
+                    document.body.appendChild(script);
+                } else {
+                    initializeNewBundel(bundleName);
                 }
             }
+        }
+    }.bind(this);
+
+    var initializeNewBundel = function (bundleName) {
+        if (this.eventBundles[bundleName + 'Bundle']) {
+            var bundle = new this.eventBundles[bundleName + 'Bundle']();
+            bundle.init();
+            bundle.select(function ($el) {
+                if ($el && $el.length > 0) {
+                    console.log($el);
+                }
+            });
+        } else {
+            this.helper.info('Bundle ' + bundleName + ' not found');
         }
     }.bind(this);
 
@@ -181,7 +200,7 @@ var trackingJS = function(options) {
  *
  * @author Dominik Matt <dma@massiveart.com>
  */
-trackingJS.prototype.pageview = function(page, title) {
+trackingJS.prototype.pageview = function (page, title) {
     this.tracking.pageview(this.getNamespace(), page, title);
 };
 
@@ -190,7 +209,7 @@ trackingJS.prototype.pageview = function(page, title) {
  *
  * @author Dominik Matt <dma@massiveart.com>
  */
-trackingJS.prototype.event = function(category, action, label, value) {
+trackingJS.prototype.event = function (category, action, label, value) {
     this.helper.info('Send event: ' + 'category: ' + category + ' / action: ' + action + ' / label: ' + label + ' / value: ' + value);
     this.tracking.event(this.getNamespace(), category, action, label, value);
 };
@@ -204,8 +223,8 @@ trackingJS.prototype.event = function(category, action, label, value) {
  *
  * @type {function(this:trackingJS)}
  */
-trackingJS.prototype.registerEcommerce = function() {
-    if(typeof this.eCommerce == 'function') {
+trackingJS.prototype.registerEcommerce = function () {
+    if (typeof this.eCommerce == 'function') {
         this.helper.info('Register eCommerce tracking');
         return new this.eCommerce(this);
     } else {
@@ -223,12 +242,12 @@ trackingJS.prototype.registerEcommerce = function() {
  *
  * @type {function(this:trackingJS)}
  */
-trackingJS.prototype.viewAllEvents = function() {
-    $.each(this.registeredEvents, function(key, el) {
+trackingJS.prototype.viewAllEvents = function () {
+    $.each(this.registeredEvents, function (key, el) {
         var $el = $(el),
             sendData = $el.data(this.getSetting('dataName'));
 
-        if(!typeof sendData == 'object') {
+        if (!typeof sendData == 'object') {
             sendData = $.parseJSON(sendData);
         }
 
@@ -247,17 +266,15 @@ trackingJS.prototype.viewAllEvents = function() {
  *
  * @type {function(this:trackingJS)}
  */
-trackingJS.prototype.updateEvents = function() {
+trackingJS.prototype.updateEvents = function () {
     //reset registered events
     this.registeredEvents = [];
     this.registerEvents();
 };
 
-trackingJS.prototype.getNamespace = function() {
+trackingJS.prototype.getNamespace = function () {
     return this.namespace;
 };
-
-
 
 
 /**
@@ -266,7 +283,7 @@ trackingJS.prototype.getNamespace = function() {
  * @param trackingJS
  * @author Dominik Matt <dma@massiveart.com>
  */
-trackingJS.prototype.eCommerce = function(trackingJS) {
+trackingJS.prototype.eCommerce = function (trackingJS) {
 
     this.transaction = {
         'id': null,             // Transaction ID. Required.
@@ -280,34 +297,34 @@ trackingJS.prototype.eCommerce = function(trackingJS) {
 
     this.namepsace = '';
 
-    this.setNamespace = function(namepsace) {
+    this.setNamespace = function (namepsace) {
         this.namepsace = namepsace;
     };
 
-    this.getNamespace = function() {
+    this.getNamespace = function () {
         return this.namepsace;
     };
 
-    this.setId = function(id) {
+    this.setId = function (id) {
         this.transaction.id = id;
     };
 
-    this.setAffiliation = function(affiliation) {
+    this.setAffiliation = function (affiliation) {
         this.transaction.affiliation = affiliation;
     };
 
-    this.setShipping = function(shipping) {
+    this.setShipping = function (shipping) {
         this.transaction.shipping = shipping;
     };
 
-    this.setTax = function(tax) {
+    this.setTax = function (tax) {
         this.transaction.tax = tax;
     };
 
-    this.getRevenue = function() {
+    this.getRevenue = function () {
         var total = 0;
-        $.each(this.getItems(), function(key, item) {
-            if(item.price) {
+        $.each(this.getItems(), function (key, item) {
+            if (item.price) {
                 total += item.price;
             }
         });
@@ -315,17 +332,17 @@ trackingJS.prototype.eCommerce = function(trackingJS) {
         return total;
     };
 
-    this.addItem = function(item) {
+    this.addItem = function (item) {
         trackingJS.helper.info('Add item to ecommerce:');
         trackingJS.helper.info(item, true);
-        if(typeof item == 'object') {
+        if (typeof item == 'object') {
             this.items.push(item);
         } else {
             trackingJS.helper.error('Item must be an object');
         }
     };
 
-    this.send = function() {
+    this.send = function () {
         trackingJS.tracking.eCommerce.generate(trackingJS, this);
     }.bind(this);
 
@@ -337,7 +354,7 @@ trackingJS.prototype.eCommerce = function(trackingJS) {
  *
  * @returns {Array}
  */
-trackingJS.prototype.eCommerce.prototype.getItems = function() {
+trackingJS.prototype.eCommerce.prototype.getItems = function () {
     return this.items;
 };
 

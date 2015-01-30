@@ -1,7 +1,8 @@
 /**
  * Downloads bundle for the Sulu CMF
  */
-trackingJS.prototype.eventBundles.downloads = function() {
+console.log('test');
+trackingJS.eventBundles.suluDownloadsBundle = function() {
     this.dataName = 'downloads';
 
     this.init = function() {

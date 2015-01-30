@@ -1,6 +1,6 @@
 {
     "name": "trackingJS",
-    "version": "0.2.1",
+    "version": "0.4.0",
     "homepage": "https://github.com/dominikmatt/trackingJS",
     "authors": [
         "Dominik Matt <mail@matt-dominik.at>"
@@ -12,7 +12,9 @@
         "universal analytics",
         "tracking",
         "track",
-        "eCommerce"
+        "eCommerce",
+        "event",
+        "event bundle"
     ],
     "license": "Apache License"
 }
