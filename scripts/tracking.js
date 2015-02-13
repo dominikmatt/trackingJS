@@ -15,7 +15,7 @@ var trackingJS = function(options) {
         url: 'auto',
         pageview: true,
         dataName: 'trackingjs',
-        debug: true,
+        debug: false,
         anonymizeIp: false
     }, options);
 
@@ -289,8 +289,8 @@ trackingJS.prototype.eCommerce = function(trackingJS) {
     this.getRevenue = function() {
         var total = 0;
         $.each(this.getItems(), function(key, item) {
-            if(item.price) {
-                total += item.price;
+            if(item.price && item.quantity > 0) {
+                total += item.price * item.quantity;
             }
         });
 
@@ -300,7 +300,7 @@ trackingJS.prototype.eCommerce = function(trackingJS) {
     this.addItem = function(item) {
         trackingJS.helper.info('Add item to ecommerce:');
         trackingJS.helper.info(item, true);
-        if(typeof item == 'object') {
+        if(typeof item == 'object' && item.quantity > 0) {
             this.items.push(item);
         } else {
             trackingJS.helper.error('Item must be an object');
