@@ -15,7 +15,7 @@ var trackingJS = function (options) {
         url: 'auto',
         pageview: true,
         dataName: 'trackingjs',
-        debug: true,
+        debug: false,
         anonymizeIp: false,
         eventBundle: {
             path: '/scripts/eventBundle/',
@@ -180,12 +180,9 @@ var trackingJS = function (options) {
     var initializeNewBundel = function (bundleName) {
         if (this.eventBundles[bundleName + 'Bundle']) {
             var bundle = new this.eventBundles[bundleName + 'Bundle']();
-            bundle.init();
-            bundle.select(function ($el) {
-                if ($el && $el.length > 0) {
-                    console.log($el);
-                }
-            });
+            bundle.init(this, function($el) {
+                this.registeredEvents.push($el);
+            }.bind(this));
         } else {
             this.helper.info('Bundle ' + bundleName + ' not found');
         }
@@ -323,9 +320,10 @@ trackingJS.prototype.eCommerce = function (trackingJS) {
 
     this.getRevenue = function () {
         var total = 0;
-        $.each(this.getItems(), function (key, item) {
-            if (item.price) {
-                total += item.price;
+
+        $.each(this.getItems(), function(key, item) {
+            if(item.price && item.quantity > 0) {
+                total += item.price * item.quantity;
             }
         });
 
@@ -335,8 +333,11 @@ trackingJS.prototype.eCommerce = function (trackingJS) {
     this.addItem = function (item) {
         trackingJS.helper.info('Add item to ecommerce:');
         trackingJS.helper.info(item, true);
-        if (typeof item == 'object') {
-            this.items.push(item);
+
+        if(typeof item == 'object') {
+            if(item.quantity > 0) {
+                this.items.push(item);
+            }
         } else {
             trackingJS.helper.error('Item must be an object');
         }

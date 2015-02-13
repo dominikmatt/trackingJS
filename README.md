@@ -43,7 +43,7 @@ is for the event register we can set on the default on data-trackingjs=""
 
 
 ###debug
-*Default*: (boolean) true  
+*Default*: (boolean) false
 view debug messages
 
 ###anonymizeIp

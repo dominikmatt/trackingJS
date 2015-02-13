@@ -16,10 +16,16 @@
         pageview: false
     });
 
+    var orderID = new Date().getTime();
+
     var ecTracking = trackingJS.registerEcommerce();
-    ecTracking.setId(1);
+    ecTracking.setId(orderID);
+    ecTracking.setAffiliation('test store');
+    ecTracking.setShipping(5);
+    ecTracking.setTax(20);
+
     ecTracking.addItem({
-        id: '1',
+        id: orderID,
         name: 'Product 1',
         sku: 'xyz-1',
         category: 'Products Cat',
@@ -28,12 +34,21 @@
     });
 
     ecTracking.addItem({
-        id: '2',
+        id: orderID,
         name: 'Product 2',
         sku: 'xyz-2',
         category: 'Products Cat',
         price: 22,
         quantity: 2
+    });
+
+    ecTracking.addItem({
+        id: orderID,
+        name: 'Product 3',
+        sku: 'xyz-3',
+        category: 'Products Cat',
+        price: 33,
+        quantity: 0
     });
 
     ecTracking.send();
