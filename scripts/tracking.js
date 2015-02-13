@@ -300,8 +300,10 @@ trackingJS.prototype.eCommerce = function(trackingJS) {
     this.addItem = function(item) {
         trackingJS.helper.info('Add item to ecommerce:');
         trackingJS.helper.info(item, true);
-        if(typeof item == 'object' && item.quantity > 0) {
-            this.items.push(item);
+        if(typeof item == 'object') {
+            if(item.quantity > 0) {
+                this.items.push(item);
+            }
         } else {
             trackingJS.helper.error('Item must be an object');
         }
