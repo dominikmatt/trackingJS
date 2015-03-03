@@ -4,6 +4,7 @@ var uaTrackingJS = function(trackingJSOptions, trackingJSHelper) {
      * initialize
      */
     this.init = function (namespace, code, url, pageview) {
+        this.namespace = namespace;
         var options = {
                 name: namespace
             };
@@ -30,15 +31,7 @@ var uaTrackingJS = function(trackingJSOptions, trackingJSHelper) {
             (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
             m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
         })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-    }
-
-    return {
-        init: this.init,
-        appendAnalyticsJs: this.appendAnalyticsJs,
-        pageview: this.pageview,
-        event: this.event,
-        eCommerce: this.eCommerce
-    }
+    };
 };
 
 /**
@@ -47,7 +40,7 @@ var uaTrackingJS = function(trackingJSOptions, trackingJSHelper) {
  * @param page
  * @param title
  */
-uaTrackingJS.prototype.pageview = function(namespace, page, title) {
+uaTrackingJS.prototype.pageview = function(page, title) {
     var options = {};
 
 
@@ -60,7 +53,7 @@ uaTrackingJS.prototype.pageview = function(namespace, page, title) {
     }
 
 
-    ga(namespace + '.send', 'pageview', options);
+    ga(this.namespace + '.send', 'pageview', options);
 };
 
 /**
@@ -71,7 +64,7 @@ uaTrackingJS.prototype.pageview = function(namespace, page, title) {
  * @param label
  * @param value
  */
-uaTrackingJS.prototype.event = function(namespace, category, action, label, value) {
+uaTrackingJS.prototype.event = function(category, action, label, value) {
     var options = {
         'hitType': 'event',
         eventCategory: category,
@@ -86,7 +79,7 @@ uaTrackingJS.prototype.event = function(namespace, category, action, label, valu
         options.eventValue = value;
     }
 
-    ga(namespace + '.send', options);
+    ga(this.namespace + '.send', options);
 };
 
 /**
@@ -170,4 +163,13 @@ uaTrackingJS.prototype.eCommerce = {
     send: function() {
         ga(this.trackingJS.getNamespace() + '.ecommerce:send');
     }
+};
+
+/**
+ * setUserId
+ *
+ * @param userId
+ */
+uaTrackingJS.prototype.setUserId = function(userId) {
+    ga(this.namespace + '.set', 'userId', userId);
 };
