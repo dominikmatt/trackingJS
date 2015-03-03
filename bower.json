@@ -16,5 +16,6 @@
         "event",
         "event bundle"
     ],
-    "license": "Apache License"
+    "license": "Apache License",
+    "ignore": []
 }
