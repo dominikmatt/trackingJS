@@ -161,12 +161,8 @@ var trackingJS = function(options) {
                 var bundleName = settings.eventBundles[key];
                 if(this.eventBundles[bundleName]) {
                     var bundle = new this.eventBundles[bundleName]();
-                    bundle.init();
-                    bundle.select(function($el) {
-                        if($el && $el.length > 0) {
-                            console.log($el);
-                        }
-                    });
+                    bundle.init(this.tracking);
+                    this.bundles[bundleName] = bundle;
                 }
             }
         }
@@ -182,7 +178,7 @@ var trackingJS = function(options) {
  * @author Dominik Matt <dma@massiveart.com>
  */
 trackingJS.prototype.pageview = function(page, title) {
-    this.tracking.pageview(this.getNamespace(), page, title);
+    this.tracking.pageview(page, title);
 };
 
 /**
@@ -192,7 +188,7 @@ trackingJS.prototype.pageview = function(page, title) {
  */
 trackingJS.prototype.event = function(category, action, label, value) {
     this.helper.info('Send event: ' + 'category: ' + category + ' / action: ' + action + ' / label: ' + label + ' / value: ' + value);
-    this.tracking.event(this.getNamespace(), category, action, label, value);
+    this.tracking.event(category, action, label, value);
 };
 
 /**
@@ -342,6 +338,7 @@ trackingJS.prototype.eCommerce.prototype.getItems = function() {
 };
 
 trackingJS.prototype.eventBundles = {};
+trackingJS.prototype.bundles = {};
 
 
 

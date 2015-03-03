@@ -4,26 +4,29 @@
     <title>trackingJS event bundle</title>
 </head>
 <body>
-    <a href="test/test.pdf" data-trackingjs-download="true" class="download">Download Bundle</a>
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
     <script src="/scripts/adapter/ua.js"></script>
     <script src="/scripts/tracking.js"></script>
-    <script src="/scripts/eventBundle/downloadSuluBundle.js"></script>
+    <script src="/scripts/eventBundle/authBundle.js"></script>
     <script type="text/javascript">
         var trackingJS = new trackingJS({
+            namespace: 'bundle',
             type: 'ua',
             analyticsCode: 'UA-57009541-1',
             url: 'auto',
             pageview: false,
             anonymizeIp: false,
-            eventBundles: ['downloads', 'test']
+            eventBundles: ['auth']
         });
 
 
-        trackingJS.pageview('test/1', 'test title1');
+        //trackingJS.pageview('test/1', 'test title1');
 
-        trackingJS.event('category1', 'action', 'label', 1);
-
+        //trackingJS.event('category1', 'action', 'label', 1);
+        trackingJS.bundles.auth.setData('myUsername', 'myUserId');
+        trackingJS.bundles.auth.signup();
+        trackingJS.bundles.auth.signin();
+        trackingJS.bundles.auth.signout();
 
     </script>
 </body>
