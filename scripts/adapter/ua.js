@@ -12,7 +12,7 @@ var uaTrackingJS = function(trackingJSOptions, trackingJSHelper) {
 
         if(trackingJSOptions.anonymizeIp === true) {
             trackingJSHelper.info(options.name + ' ip is anonymous');
-            ga('set', 'anonymizeIp', true);
+            ga(namespace + '.set', 'anonymizeIp', true);
         } else {
             trackingJSHelper.info(options.name + ' ip is not anonymous');
         }
