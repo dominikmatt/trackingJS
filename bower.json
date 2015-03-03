@@ -12,7 +12,9 @@
         "universal analytics",
         "tracking",
         "track",
-        "eCommerce"
+        "eCommerce",
+        "event",
+        "event bundle"
     ],
     "license": "Apache License"
 }
