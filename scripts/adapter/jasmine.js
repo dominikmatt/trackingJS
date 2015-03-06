@@ -1,5 +1,5 @@
 
-var uaTrackingJS = function(trackingJSOptions, trackingJSHelper) {
+var jasmineTrackingJS = function(trackingJSOptions, trackingJSHelper) {
     /**
      * initialize
      */
@@ -35,12 +35,12 @@ var uaTrackingJS = function(trackingJSOptions, trackingJSHelper) {
 };
 
 /**
- * uaTrackingJS
+ * jasmineTrackingJS
  *
  * @param page
  * @param title
  */
-uaTrackingJS.prototype.pageview = function(page, title, callback) {
+jasmineTrackingJS.prototype.pageview = function(page, title) {
     var options = {};
 
 
@@ -52,25 +52,19 @@ uaTrackingJS.prototype.pageview = function(page, title, callback) {
         options.title = title;
     }
 
-    if(typeof callback === 'function') {
-        options.hitCallback = function() {
-            callback(null, 'sended');
-        }
-    }
-
 
     ga(this.namespace + '.send', 'pageview', options);
 };
 
 /**
- * uaTrackingJS
+ * jasmineTrackingJS
  *
  * @param category
  * @param action
  * @param label
  * @param value
  */
-uaTrackingJS.prototype.event = function(category, action, label, value, callback) {
+jasmineTrackingJS.prototype.event = function(category, action, label, value, callback) {
     var options = {
         'hitType': 'event',
         eventCategory: category,
@@ -99,7 +93,7 @@ uaTrackingJS.prototype.event = function(category, action, label, value, callback
  *
  * @type {{generate: Function, addTransaction: Function, addItems: Function}}
  */
-uaTrackingJS.prototype.eCommerce = {
+jasmineTrackingJS.prototype.eCommerce = {
 
     trackingJs: null,
     ec: null,
@@ -182,6 +176,6 @@ uaTrackingJS.prototype.eCommerce = {
  *
  * @param userId
  */
-uaTrackingJS.prototype.setUserId = function(userId) {
+jasmineTrackingJS.prototype.setUserId = function(userId) {
     ga(this.namespace + '.set', 'userId', userId);
 };

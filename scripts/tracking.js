@@ -186,8 +186,8 @@ var trackingJS = function (options) {
  *
  * @author Dominik Matt <dma@massiveart.com>
  */
-trackingJS.prototype.pageview = function(page, title) {
-    this.tracking.pageview(page, title);
+trackingJS.prototype.pageview = function(page, title, callback) {
+    this.tracking.pageview(page, title, callback);
 };
 
 /**
@@ -195,9 +195,9 @@ trackingJS.prototype.pageview = function(page, title) {
  *
  * @author Dominik Matt <dma@massiveart.com>
  */
-trackingJS.prototype.event = function (category, action, label, value) {
+trackingJS.prototype.event = function (category, action, label, value, callback) {
     this.helper.info('Send event: ' + 'category: ' + category + ' / action: ' + action + ' / label: ' + label + ' / value: ' + value);
-    this.tracking.event(category, action, label, value);
+    this.tracking.event(category, action, label, value, callback);
 };
 
 /**
