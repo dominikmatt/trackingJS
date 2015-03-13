@@ -9,7 +9,7 @@
 <script src="/scripts/adapter/ua.js"></script>
 <script src="/scripts/tracking.js"></script>
 <script type="text/javascript">
-    var trackingJS = new trackingJS({
+    var tracking = new trackingJS({
         type: 'ua',
         analyticsCode: 'UA-57009541-1',
         url: 'auto',
@@ -18,7 +18,7 @@
 
     var orderID = new Date().getTime();
 
-    var ecTracking = trackingJS.registerEcommerce();
+    var ecTracking = tracking.registerEcommerce();
     ecTracking.setId(orderID);
     ecTracking.setAffiliation('test store');
     ecTracking.setShipping(5);
@@ -52,6 +52,11 @@
     });
 
     ecTracking.send();
+
+    //if you send the ecommerce data with onclick event and redirect to a page send a event and wait for this event
+    tracking.event('buy', 'send', 'price', ecTracking.getRevenue(), function(err, status) {
+        console.log('do redirect');
+    });
 </script>
 </body>
 </html>
