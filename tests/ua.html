@@ -16,7 +16,8 @@
     <script src="/scripts/tracking.js"></script>
 
     <script type="text/javascript">
-        var orderID = '12345';
+        var orderID = '12345',
+            ecTracking ;
 
         var getVar = function(name) {
                 var trackers = ga.getAll();
@@ -68,30 +69,6 @@
                     expect(status).toBe('sended');
                     done();
                 });
-            });
-
-
-            it('send a pageviw to google analytics without callback', function(done) {
-                tracking.pageview('/url', 'title');
-                done()
-            });
-
-            it('send a event to google analytics without callback', function(done) {
-                tracking.event('category', 'action', 'label', 0);
-                done();
-            });
-
-            it('register ecommerce', function(done) {
-                var ecTracking = tracking.registerEcommerce();
-                ecTracking.setId(orderID);
-                ecTracking.setAffiliation('test store');
-                ecTracking.setShipping(5);
-                ecTracking.setTax(20);
-
-                expect(JSON.stringify(ecTracking.transaction)).toBe('{"id":"12345","affiliation":"test store","revenue":null,"shipping":5,"tax":20}');
-
-                done();
-
             });
         });
     </script>

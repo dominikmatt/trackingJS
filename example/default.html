@@ -21,9 +21,13 @@
         });
 
 
-        trackingJS.pageview('test/1', 'test title1');
+        trackingJS.pageview('test/1', 'test title1', function() {
+            console.log('pageview sended');
+        });
 
-        trackingJS.event('category1', 'action', 'label', 1);
+        trackingJS.event('category1', 'action', 'label', 1, function() {
+            console.log('event sended');
+        });
 
 
     </script>

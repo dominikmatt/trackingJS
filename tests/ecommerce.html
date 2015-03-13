@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+</head>
+<body>
+<link rel="shortcut icon" type="image/png" href="/jasmine/lib/jasmine-2.1.3/jasmine_favicon.png">
+<link rel="stylesheet" type="text/css" href="/jasmine/lib/jasmine-2.1.3/jasmine.css">
+
+<script type="text/javascript" src="/jasmine/lib/jasmine-2.1.3/jasmine.js"></script>
+<script type="text/javascript" src="/jasmine/lib/jasmine-2.1.3/jasmine-html.js"></script>
+<script type="text/javascript" src="/jasmine/lib/jasmine-2.1.3/boot.js"></script>
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<script src="/scripts/adapter/ua.js"></script>
+<script src="/scripts/tracking.js"></script>
+
+<script type="text/javascript">
+    var orderID = '12345',
+        tracking,
+        ecTracking;
+
+    var getVar = function(name) {
+        var trackers = ga.getAll();
+
+        for(var i = 0; i < trackers.length; ++i) {
+            var tracker = trackers[i];
+            return tracker.get(name);
+        }
+    };
+
+    describe("TrackingJS ua adapter", function() {
+
+        tracking = new trackingJS({
+            namespace: 'jasmine',
+            type: 'ua',
+            analyticsCode: 'UA-57009541-1',
+            url: 'auto',
+            pageview: false,
+            anonymizeIp: true,
+            debug: true
+        });
+
+        it('register ecommerce', function(done) {
+            ecTracking = tracking.registerEcommerce();
+            ecTracking.setId(orderID);
+            ecTracking.setAffiliation('test store');
+            ecTracking.setShipping(5);
+            ecTracking.setTax(20);
+
+            expect(JSON.stringify(ecTracking.transaction)).toBe('{"id":"12345","affiliation":"test store","revenue":null,"shipping":5,"tax":20}');
+
+            done();
+
+        });
+
+        it('add Product-1 to ecommerce', function(done) {
+            ecTracking.addItem({
+                id: orderID,
+                name: 'Product 1',
+                sku: 'abc-1',
+                category: 'Products category',
+                price: 11.00,
+                quantity: 1
+            });
+
+            expect(JSON.stringify(ecTracking.getItems()[0])).toBe('{"id":"12345","name":"Product 1","sku":"abc-1","category":"Products category","price":11,"quantity":1}');
+            done();
+        });
+
+        it('add Product-2 to ecommerce and send to google', function(done) {
+            ecTracking.addItem({
+                id: orderID,
+                name: 'Product 2',
+                sku: 'abc-2',
+                category: 'Products category',
+                price: 22.00,
+                quantity: 2
+            });
+
+            expect(JSON.stringify(ecTracking.getItems()[1])).toBe('{"id":"12345","name":"Product 2","sku":"abc-2","category":"Products category","price":22,"quantity":2}');
+            ecTracking.send();
+
+            tracking.event('buy', 'send', 'price', ecTracking.getRevenue(), function(err, status) {
+                done();
+            });
+
+        });
+    });
+</script>
+</body>
+</html>
+
+
+
+

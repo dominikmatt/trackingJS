@@ -141,7 +141,10 @@ uaTrackingJS.prototype.eCommerce = {
         ga(this.trackingJS.getNamespace() + '.ecommerce:addTransaction', options);
     },
 
-    addItems: function() {
+    /**
+     * @param callback
+     */
+    addItems: function(callback) {
         $.each(this.ec.getItems(), function(key, item) {
             if (item.id && item.name && item.id != '' && item.name != '') {
                 var options = {
