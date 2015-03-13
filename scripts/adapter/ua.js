@@ -40,7 +40,7 @@ var uaTrackingJS = function(trackingJSOptions, trackingJSHelper) {
  * @param page
  * @param title
  */
-uaTrackingJS.prototype.pageview = function(page, title) {
+uaTrackingJS.prototype.pageview = function(page, title, callback) {
     var options = {};
 
 
@@ -50,6 +50,12 @@ uaTrackingJS.prototype.pageview = function(page, title) {
 
     if(title) {
         options.title = title;
+    }
+
+    if(typeof callback === 'function') {
+        options.hitCallback = function() {
+            callback(null, 'sended');
+        }
     }
 
 
@@ -64,7 +70,7 @@ uaTrackingJS.prototype.pageview = function(page, title) {
  * @param label
  * @param value
  */
-uaTrackingJS.prototype.event = function(category, action, label, value) {
+uaTrackingJS.prototype.event = function(category, action, label, value, callback) {
     var options = {
         'hitType': 'event',
         eventCategory: category,
@@ -77,6 +83,12 @@ uaTrackingJS.prototype.event = function(category, action, label, value) {
 
     if(value && value != '' && !isNaN(value)) {
         options.eventValue = value;
+    }
+
+    if(typeof callback === 'function') {
+        options.hitCallback = function() {
+            callback(null, 'sended');
+        }
     }
 
     ga(this.namespace + '.send', options);
@@ -129,7 +141,10 @@ uaTrackingJS.prototype.eCommerce = {
         ga(this.trackingJS.getNamespace() + '.ecommerce:addTransaction', options);
     },
 
-    addItems: function() {
+    /**
+     * @param callback
+     */
+    addItems: function(callback) {
         $.each(this.ec.getItems(), function(key, item) {
             if (item.id && item.name && item.id != '' && item.name != '') {
                 var options = {

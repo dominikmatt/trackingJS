@@ -57,21 +57,28 @@ view debug messages
 ```js
 var options = {
     type: 'ua',
+    namespace: 'myNamespace',
     analyticsCode: 'UA-xxxxxxxx-1',
     url: 'auto',
-    pageview: false
+    pageview: false,
+    anonymizeIp: true,
+    debug: false
 }; //view properties
 var trackingJS = new trackingJS(options);
 ```
 
 ###### sending pageview
 ```js
-trackingJS.pageview('/page-url', 'Page title');
+trackingJS.pageview('/page-url', 'Page title', function() {
+    console.log('pageview sended');
+});
 ```
 
 ###### sending event
 ```js
-trackingJS.event('category', 'action', 'label', 1);
+trackingJS.event('category', 'action', 'label', 1, function() {
+    console.log('event sended');
+});
 ```
 
 ###### register event
@@ -188,7 +195,7 @@ Include `multiTrack.js` script:
 
 ###### send pageview
 ```js
-    multiTrackJS.pageview('test/multi', 'only UA-xxxxxxxxx-1 and UA-xxxxxxxxx-2');
+    multiTrackJS.pageview('test/multi', 'UA-xxxxxxxxx-1 and UA-xxxxxxxxx-2');
 ```
 
 ###### send event

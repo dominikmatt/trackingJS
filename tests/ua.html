@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+</head>
+<body>
+    <link rel="shortcut icon" type="image/png" href="/jasmine/lib/jasmine-2.1.3/jasmine_favicon.png">
+    <link rel="stylesheet" type="text/css" href="/jasmine/lib/jasmine-2.1.3/jasmine.css">
+
+    <script type="text/javascript" src="/jasmine/lib/jasmine-2.1.3/jasmine.js"></script>
+    <script type="text/javascript" src="/jasmine/lib/jasmine-2.1.3/jasmine-html.js"></script>
+    <script type="text/javascript" src="/jasmine/lib/jasmine-2.1.3/boot.js"></script>
+
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script src="/scripts/adapter/ua.js"></script>
+    <script src="/scripts/tracking.js"></script>
+
+    <script type="text/javascript">
+        var orderID = '12345',
+            ecTracking ;
+
+        var getVar = function(name) {
+                var trackers = ga.getAll();
+
+                for(var i = 0; i < trackers.length; ++i) {
+                    var tracker = trackers[i];
+                    return tracker.get(name);
+                }
+        };
+
+        describe("TrackingJS ua adapter", function() {
+
+            it("analytics type can be loaded", function(done) {
+                expect(typeof window['uaTrackingJS'])
+                        .toBe('function');
+                done();
+            });
+
+            var tracking = new trackingJS({
+                namespace: 'jasmine',
+                type: 'ua',
+                analyticsCode: 'UA-57009541-1',
+                url: 'auto',
+                pageview: false,
+                anonymizeIp: true
+            });
+
+            it("append the analytics code to the body element", function(done) {
+                expect(window.GoogleAnalyticsObject).toBe('ga');
+                expect(getVar('anonymizeIp')).toBe(true);
+                done();
+            });
+
+            it('instance has the correct namespace', function() {
+                expect(tracking.getNamespace()).toBe('jasmine');
+            });
+
+            it('send a pageviw to google analytics', function(done) {
+                tracking.pageview('/url', 'title', function(err, status) {
+                    expect(err).toBe(null);
+                    expect(status).toBe('sended');
+                    done();
+                });
+            });
+
+            it('send a event to google analytics', function(done) {
+                tracking.event('category', 'action', 'label', 0, function(err, status) {
+                    expect(err).toBe(null);
+                    expect(status).toBe('sended');
+                    done();
+                });
+            });
+        });
+    </script>
+</body>
+</html>
+
+
+
+
