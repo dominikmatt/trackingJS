@@ -41,7 +41,11 @@ trackingJS.prototype.eventBundles.video = function() {
      */
     var playHandler = function() {
         console.log(tracking);
-        tracking.event('Video', 'Video - Play', 'Video: ' + getSource.call(this), this.currentTime);
+        tracking.event(
+            'Video',
+            'Video - Play',
+            'Video: ' + getSource.call(this), this.currentTime
+        );
     };
 
     /**
@@ -49,7 +53,11 @@ trackingJS.prototype.eventBundles.video = function() {
      */
     var pauseHandler = function() {
         pauseTimeout = setTimeout(function() {
-            tracking.event('Video', 'Video - Pause', 'Video: ' + getSource.call(this), this.currentTime);
+            tracking.event(
+                'Video',
+                'Video - Pause',
+                'Video: ' + getSource.call(this), this.currentTime
+            );
         }.bind(this), 50);
     };
 
@@ -58,7 +66,11 @@ trackingJS.prototype.eventBundles.video = function() {
      */
     var endHandler = function() {
         clearTimeout(pauseTimeout);
-        tracking.event('Video', 'Video - Stop', 'Video: ' + getSource.call(this), this.currentTime);
+        tracking.event(
+            'Video',
+            'Video - Stop',
+            'Video: ' + getSource.call(this), this.currentTime
+        );
     };
 
     /**
