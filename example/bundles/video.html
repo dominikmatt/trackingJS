@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+<video width="320" height="240" controls>
+    <source src="http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4" type="video/mp4">
+    <source src="http://clips.vorwaerts-gmbh.de/big_buck_bunny.ogv" type="video/ogg">
+    Your browser does not support the video tag.
+</video>
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<script src="/scripts/adapter/ua.js"></script>
+<script src="/scripts/tracking.js"></script>
+<script src="/scripts/eventBundle/videoBundle.js"></script>
+
+<script type="text/javascript">
+    var tracking = new trackingJS({
+        namespace: 'linkBundle',
+        type: 'ua',
+        analyticsCode: 'UA-57009541-1',
+        url: 'auto',
+        pageview: false,
+        anonymizeIp: true,
+        debug: true,
+        eventBundles: ['video']
+    });
+
+    setTimeout(function() {
+        $('body').append('<video width="320" height="240" controls id="video-id">' +
+        '<source src="http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4" type="video/mp4">' +
+        '<source src="http://clips.vorwaerts-gmbh.de/big_buck_bunny.ogv" type="video/ogg"> ' +
+        '</video>')
+        tracking.bundles.video.registerVideo('video-id');
+    }, 6000);
+
+</script>
+</body>
+</html>

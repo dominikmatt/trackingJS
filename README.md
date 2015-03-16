@@ -165,6 +165,19 @@ trackingJS.updateEvents();
     ecTracking.send();
 ```
 
+### Bundles
+Include `eventBundle/bundleName.js` script:
+```html
+    <script src="/scripts/eventBundle/authBundle.js"></script>
+```
+
+Add the option with all bundles on the Construct
+```
+    eventBundles: ['auth', 'link', 'video']
+´´´
+
+-> use the bundle
+
 ### multiTracking
 Include `multiTrack.js` script:
 ```html
