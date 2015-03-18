@@ -82,7 +82,7 @@ trackingJS.prototype.eventBundles.form = function() {
          */
         signup: function(name, callback) {
             if(typeof callback != 'function') callback = function() {}
-            tracking.event('Newsletter', 'Newsletter - Sign-Up', 'Newsletter: '+ name + ' sign-up success', callback);
+            tracking.event('Newsletter', 'Newsletter - Sign-Up', 'Newsletter: '+ name + ' sign-up success', null, callback);
         },
 
         /**
@@ -93,7 +93,7 @@ trackingJS.prototype.eventBundles.form = function() {
          */
         signupFailed: function(name, callback) {
             if(typeof callback != 'function') callback = function() {}
-            tracking.event('Newsletter', 'Newsletter - Sign-Up', 'Newsletter: '+ name + ' sign-up failed', callback);
+            tracking.event('Newsletter', 'Newsletter - Sign-Up', 'Newsletter: '+ name + ' sign-up failed', null, callback);
         },
 
         /**
@@ -104,7 +104,7 @@ trackingJS.prototype.eventBundles.form = function() {
          */
         signoff: function(name, callback) {
             if(typeof callback != 'function') callback = function() {}
-            tracking.event('Newsletter', 'Newsletter - Sign-Off', 'Newsletter: '+ name + ' sign-off', callback);
+            tracking.event('Newsletter', 'Newsletter - Sign-Off', 'Newsletter: '+ name + ' sign-off', null, callback);
         }
     };
 

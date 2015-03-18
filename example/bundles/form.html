@@ -37,9 +37,9 @@
         eventBundles: ['form']
     });
 
+    var $form = $('#form');
 
     $('form').on('submit', function(event) {
-        var $form = $('#form');
 
         if($form.find('#lastname').val() == '') {
             tracking.bundles.form.sendFailed($form);
@@ -47,6 +47,8 @@
             return false;
         }
     });
+    tracking.bundles.form.newsletter.signonFailed('Newsletter1');
+    tracking.bundles.form.newsletter.signoff('Newsletter1');
 
 </script>
 </body>
