@@ -40,16 +40,16 @@ trackingJS.prototype.eventBundles.link = function() {
         // phone
         if(/tel:/.test(href)) {
             this.tracking.event(
-                'Phone',
-                'Phone - Click',
-                'Phone: ' + $el.text() + ' - Number: ' + href.replace('tel:', '')
+                'Contact',
+                'Contact - Click Tel',
+                'Tel:' + href.replace('tel:', '')
             );
             //mailto
         } else if(/mailto:/.test(href)) {
             this.tracking.event(
-                'Mail',
-                'Mail - Click',
-                'Mail: ' + $el.text() + ' - Mail: ' + href.replace('mailto:', '')
+                'Contact',
+                'Contact - Click Mail',
+                'E-Mail: ' + href.replace('mailto:', '')
             );
             //external link
         } else if(external.test(href)){

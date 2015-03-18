@@ -2,6 +2,6 @@
     - external link (Event on Click)
         External Link // External Link - Click // External Link: name* - Link: url*
     - mailto: (Event on Click)
-        Mail // Mail - Click // Mail: name* - Mail: address*
+        Contact // Contact - Click Mail // Mail: mailaddress*
     - tel: (Event on Click)
-        Phone // Phone - Click // Phone: name* // Phone: name* - Number: phonenumber*
+        Contact // Contact - Click Tel // Tel: phonenumber*
