@@ -6,13 +6,19 @@
 trackingJS.prototype.eventBundles.form = function() {
     this.bundleName = 'form';
 
+    var tracking,
+        settings = {};
+
+
     /**
      * @method init
      *
      * @param tracking
      */
-    this.init = function init(t) {
-        tracking = t;
+    this.init = function init(origTracking, origSettings) {
+        tracking = origTracking;
+        settings = origSettings;
+        setDefaultSettings();
         bindEvents();
     };
 
@@ -21,6 +27,14 @@ trackingJS.prototype.eventBundles.form = function() {
      */
     var bindEvents = function() {
         $( document ).delegate( 'form', 'submit', formSendHandler);
+    };
+
+    var setDefaultSettings = function() {
+        if(!settings.formBundle) {
+            settings.formBundle = {
+                formEnableDataName: 'form-auto-track'
+            }
+        }
     };
 
     /**
@@ -33,8 +47,10 @@ trackingJS.prototype.eventBundles.form = function() {
         var $form = $(event.currentTarget),
             data = getFormData($form);
 
-        trackNewsletterHandler($form);
-        tracking.event(data.name, data.name + ' - Send success', 'Form: ' + data.name + ' send success');
+        if(typeof data.enabled != 'undefined') {
+            trackNewsletterHandler($form);
+            tracking.event(data.name, data.name + ' - Send success', 'Form: ' + data.name + ' send success');
+        }
     };
 
     /**
@@ -57,6 +73,19 @@ trackingJS.prototype.eventBundles.form = function() {
             }.bind(this));
         }
     }.bind(this);
+
+    /**
+     * @method send
+     *
+     * @param $form
+     */
+    this.send = function($form, callback) {
+        var data = getFormData($form),
+            done = callback || function() {};
+
+        trackNewsletterHandler($form);
+        tracking.event(data.name, data.name + ' - Send success', 'Form: ' + data.name + ' send success', null, done);
+    };
 
     /**
      * @method sendFailed
@@ -116,6 +145,7 @@ trackingJS.prototype.eventBundles.form = function() {
      */
     var getFormData = function($form) {
         var data = {
+                enabled: $form.data(settings.formBundle.formEnableDataName),
                 name: $form.data('form-name')
             };
 
