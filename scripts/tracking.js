@@ -31,7 +31,7 @@ var trackingJS = function (options) {
         checkDebug();
 
         loadAdapter();
-        loadEventBundels();
+        loadEventBundles();
         if (this.tracking && typeof this.tracking == 'object') {
             this.tracking.appendAnalyticsJs();
             this.tracking.init(settings.namespace, settings.analyticsCode, settings.url, settings.pageview);
@@ -153,13 +153,17 @@ var trackingJS = function (options) {
         }.bind(this));
     }.bind(this);
 
-    var loadEventBundels = function() {
+    /**
+     * @method loadEventBundles
+     * @type {*|function(this:trackingJS)}
+     */
+    var loadEventBundles = function() {
         if(settings.eventBundles && typeof settings.eventBundles == 'object' && settings.eventBundles.length > 0) {
             for(var key in settings.eventBundles) {
                 var bundleName = settings.eventBundles[key];
                 if(this.eventBundles[bundleName]) {
                     var bundle = new this.eventBundles[bundleName]();
-                    bundle.init(this.tracking);
+                    bundle.init(this.tracking, settings);
                     this.bundles[bundleName] = bundle;
                 }
             }

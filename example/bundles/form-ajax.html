@@ -5,7 +5,7 @@
     <title></title>
 </head>
 <body>
-<form data-form-auto-track data-form-name="Formular name" id="form">
+<form data-form-name="Formular name" id="form">
     <div class="input-wrap">
         <label for="firstname">Firstname</label>
         <input type="text" name="firstname" id="firstname" />
@@ -35,10 +35,7 @@
         pageview: false,
         anonymizeIp: true,
         debug: true,
-        eventBundles: ['form'],
-        formBundle: {
-            formEnableDataName: 'form-auto-track' //Default
-        }
+        eventBundles: ['form']
     });
 
     var $form = $('#form');
@@ -47,12 +44,21 @@
 
         if($form.find('#lastname').val() == '') {
             tracking.bundles.form.sendFailed($form);
-            event.preventDefault();
-            return false;
+        } else {
+            $.getJSON('/example/bundles/callback.json')
+                    .success(function() {
+                        tracking.bundles.form.send($form, function() {
+                            alert('sended');
+                        });
+                    })
+                    .error(function() {
+                        tracking.bundles.form.sendFailed($form);
+                    })
         }
+
+        event.preventDefault();
+        return false;
     });
-    tracking.bundles.form.newsletter.signupFailed('Newsletter1');
-    tracking.bundles.form.newsletter.signoff('Newsletter1');
 
 </script>
 </body>
