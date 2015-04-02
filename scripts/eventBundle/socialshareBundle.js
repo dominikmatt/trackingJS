@@ -26,7 +26,7 @@ trackingJS.prototype.eventBundles.socialshare = function() {
     }.bind(this);
 
     /**
-     * @method linkHandler
+     * @method socialshareHandler
      *
      * @param event
      * @returns {boolean}
