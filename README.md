@@ -51,7 +51,7 @@ view debug messages
 (boolean) false | on true the ip will be anonymous  
 
 ###eventBundles:  
-*Default* (array) []  
+*Default:* (array)    
 (array) | name of the bundles  
 
 ##Using
