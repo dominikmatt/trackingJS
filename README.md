@@ -48,11 +48,11 @@ view debug messages
 
 ###anonymizeIp
 *Default*: (boolean) false  
-(boolean) false | on true the ip will be anonymous
+(boolean) false | on true the ip will be anonymous  
 
 ###eventBundles:  
-*Default* (array) []
-(array) | name of the bundles
+*Default* (array) []  
+(array) | name of the bundles  
 
 ##Using
 
