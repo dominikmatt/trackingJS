@@ -50,6 +50,10 @@ view debug messages
 *Default*: (boolean) false  
 (boolean) false | on true the ip will be anonymous
 
+###eventBundles:  
+*Default* (array) []
+(array) | name of the bundles
+
 ##Using
 
 ### Default tracking
@@ -172,7 +176,7 @@ Include `eventBundle/bundleName.js` script:
 ```
 
 Add the option with all bundles on the Construct
-```
+```js
     eventBundles: ['auth', 'link', 'video']
 ´´´
 
