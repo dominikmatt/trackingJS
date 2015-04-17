@@ -178,7 +178,7 @@ Include `eventBundle/bundleName.js` script:
 Add the option with all bundles on the Construct
 ```js
     eventBundles: ['auth', 'link', 'video']
-´´´
+```
 
 -> use the bundle
 
