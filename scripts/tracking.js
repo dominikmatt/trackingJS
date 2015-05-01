@@ -17,7 +17,8 @@ var trackingJS = function (options) {
         dataName: 'trackingjs',
         debug: false,
         anonymizeIp: false,
-        eventBundles: []
+        eventBundles: [],
+        set: {}
     }, options);
 
     /**
@@ -32,9 +33,14 @@ var trackingJS = function (options) {
 
         loadAdapter();
         loadEventBundles();
+
         if (this.tracking && typeof this.tracking == 'object') {
             this.tracking.appendAnalyticsJs();
-            this.tracking.init(settings.namespace, settings.analyticsCode, settings.url, settings.pageview);
+            this.tracking.init(settings.namespace, settings.analyticsCode, settings.url);
+            this.setTrackingVars(settings.set);
+            if(settings.pageview === true) {
+                this.tracking.pageview(options.name);
+            }
             this.registerEvents();
         } else {
             throw 'Tracking type not loaded';
@@ -205,6 +211,15 @@ trackingJS.prototype.event = function (category, action, label, value, callback)
 };
 
 /**
+ * @method setTrackingVars
+ */
+trackingJS.prototype.setTrackingVars = function(vars) {
+    if(!!vars) {
+        this.tracking.set(vars);
+    }
+};
+
+/**
  * register eCommerce Plugin
  *
  * @method registerEcomerce
@@ -262,6 +277,11 @@ trackingJS.prototype.updateEvents = function () {
     this.registerEvents();
 };
 
+/**
+ * @method getNamespace
+ *
+ * @return {string} namespace
+ */
 trackingJS.prototype.getNamespace = function () {
     return this.namespace;
 };
