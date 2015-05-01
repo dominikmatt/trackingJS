@@ -43,12 +43,16 @@ is for the event register we can set on the default on data-trackingjs=""
 
 
 ###debug
-*Default*: (boolean) false
+*Default*: (boolean) false  
 view debug messages
 
 ###anonymizeIp
 *Default*: (boolean) false  
 (boolean) false | on true the ip will be anonymous
+
+###set
+*Default*: (object) {}  
+(object) {} | visit: https://developers.google.com/analytics/devguides/collection/analyticsjs/method-reference#set
 
 ##Using
 

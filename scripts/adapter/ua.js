@@ -3,7 +3,7 @@ var uaTrackingJS = function(trackingJSOptions, trackingJSHelper) {
     /**
      * initialize
      */
-    this.init = function (namespace, code, url, pageview) {
+    this.init = function (namespace, code, url) {
         this.namespace = namespace;
         var options = {
                 name: namespace
@@ -16,10 +16,6 @@ var uaTrackingJS = function(trackingJSOptions, trackingJSHelper) {
             ga(namespace + '.set', 'anonymizeIp', true);
         } else {
             trackingJSHelper.info(options.name + ' ip is not anonymous');
-        }
-
-        if(pageview === true) {
-            this.pageview(options.name);
         }
     }.bind(this),
 
@@ -188,3 +184,15 @@ uaTrackingJS.prototype.eCommerce = {
 uaTrackingJS.prototype.setUserId = function(userId) {
     ga(this.namespace + '.set', 'userId', userId);
 };
+
+/**
+ * @method set
+ *
+ * @param {string} key
+ * @param {string} value
+ */
+uaTrackingJS.prototype.set = function(set) {
+    if(typeof set === 'object') {
+        ga(this.namespace + '.set', set);
+    }
+}
