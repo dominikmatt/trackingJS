@@ -29,7 +29,6 @@ trackingJS.prototype.eventBundles.socialshare = function() {
      * @method socialshareHandler
      *
      * @param event
-     * @returns {boolean}
      */
     var socialshareHandler = function(event) {
         var $el = $(event.currentTarget),
