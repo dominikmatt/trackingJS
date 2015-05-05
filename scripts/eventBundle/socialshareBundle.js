@@ -35,11 +35,10 @@ trackingJS.prototype.eventBundles.socialshare = function() {
         var $el = $(event.currentTarget),
             platform = $el.data('platform');
 
-            this.tracking.event(
-                'Social Media',
-                'Social Media - ' + platform + ' Share',
-                'Social Media: ' + platform + ' Share'
-            );
-        
+        this.tracking.event(
+            'Social Media',
+            'Social Media - ' + platform + ' Share',
+            'Social Media: ' + platform + ' Share'
+        );
     }
 };
