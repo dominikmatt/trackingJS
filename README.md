@@ -43,7 +43,7 @@ is for the event register we can set on the default on data-trackingjs=""
 
 
 ###debug
-*Default*: (boolean) false
+*Default*: (boolean) false  
 view debug messages
 
 ###anonymizeIp
@@ -53,6 +53,10 @@ view debug messages
 ###eventBundles:  
 *Default:* (array)    
 (array) | name of the bundles  
+
+###set
+*Default*: (object) {}  
+(object) {} | visit: https://developers.google.com/analytics/devguides/collection/analyticsjs/method-reference#set
 
 ##Using
 
