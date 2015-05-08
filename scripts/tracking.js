@@ -38,9 +38,11 @@ var trackingJS = function (options) {
             this.tracking.appendAnalyticsJs();
             this.tracking.init(settings.namespace, settings.analyticsCode, settings.url);
             this.setTrackingVars(settings.set);
+
             if(settings.pageview === true) {
                 this.tracking.pageview(options.name);
             }
+            
             this.registerEvents();
         } else {
             throw 'Tracking type not loaded';
