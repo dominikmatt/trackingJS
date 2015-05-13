@@ -1,3 +1,6 @@
+'use strict';
+/*global $, trackingJS */
+
 /**
  * link Bundle
  *
@@ -54,7 +57,7 @@ trackingJS.prototype.eventBundles.link = function() {
             //external link
         } else if(external.test(href)){
             //if the link is open in the same tab we wait for the event
-            if(target != '_blank') {
+            if(target !== '_blank') {
                 this.tracking.event(
                     'External Link',
                     'External Link - Click',
@@ -74,5 +77,5 @@ trackingJS.prototype.eventBundles.link = function() {
                 );
             }
         }
-    }
+    };
 };

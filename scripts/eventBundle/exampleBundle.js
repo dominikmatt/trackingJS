@@ -1,3 +1,6 @@
+'use strict';
+/*global $, trackingJS */
+
 /**
  * Example bundle
  */
@@ -11,7 +14,7 @@ trackingJS.eventBundles.exampleBundle = function() {
     this.init = function(core, callback) {
         console.log('init bundle example :)');
         select();
-        callback(this.$el)
+        callback(this.$el);
     };
 
     /**
@@ -30,7 +33,5 @@ trackingJS.eventBundles.exampleBundle = function() {
      */
     this.getData = function() {
 
-    }
-
-
+    };
 };
