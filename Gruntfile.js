@@ -2,6 +2,7 @@
 
 module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-jshint');
+    grunt.loadNpmTasks('grunt-contrib-connect');
     grunt.loadNpmTasks('jshint-stylish');
 
     grunt.initConfig({
@@ -16,7 +17,16 @@ module.exports = function(grunt) {
                 'scripts/**/*.js'
             ]
         },
+        connect: {
+            server: {
+                options: {
+                    port: 3000,
+                    hostname: '*'
+                }
+            }
+          }
     });
    
     grunt.registerTask('default', ['jshint']);
+    grunt.registerTask('serve', ['connect:server:keepalive']);
 };
