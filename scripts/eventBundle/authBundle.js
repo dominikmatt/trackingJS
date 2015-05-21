@@ -1,3 +1,6 @@
+'use strict';
+/*global trackingJS */
+
 /**
  * Auth Bundle
  */

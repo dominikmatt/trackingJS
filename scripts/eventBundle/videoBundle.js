@@ -1,3 +1,6 @@
+'use strict';
+/*global trackingJS */
+
 /**
  * video Bundle
  *
@@ -92,6 +95,6 @@ trackingJS.prototype.eventBundles.video = function() {
     this.registerVideo = function(id) {
         var video = document.getElementById(id);
         videoHandler.call(video);
-    }
+    };
 
 };

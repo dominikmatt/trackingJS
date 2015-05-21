@@ -1,3 +1,5 @@
+'use strict';
+/*global ga, $ */
 
 var uaTrackingJS = function(trackingJSOptions, trackingJSHelper) {
     /**
@@ -17,16 +19,18 @@ var uaTrackingJS = function(trackingJSOptions, trackingJSHelper) {
         } else {
             trackingJSHelper.info(options.name + ' ip is not anonymous');
         }
-    }.bind(this),
+    }.bind(this);
 
     /**
      * includes the ua analytics js
      */
     this.appendAnalyticsJs = function () {
+        /* jshint ignore:start */
         (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-            m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+            (i[r].q=i[r].q||[]).push(arguments);},i[r].l=1*new Date();a=s.createElement(o),
+            m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m);
+        })(window,document,'script','//www.google-analytics.com/analytics.js','ga'); 
+        /* jshint ignore:end */
     };
 };
 
@@ -51,7 +55,7 @@ uaTrackingJS.prototype.pageview = function(page, title, callback) {
     if(typeof callback === 'function') {
         options.hitCallback = function() {
             callback(null, 'sended');
-        }
+        };
     }
 
 
@@ -73,18 +77,18 @@ uaTrackingJS.prototype.event = function(category, action, label, value, callback
         eventAction: action
     };
 
-    if(label && label != '') {
+    if(label && label !== '') {
         options.eventLabel = label;
     }
 
-    if(value && value != '' && !isNaN(value)) {
+    if(value && value !== '' && !isNaN(value)) {
         options.eventValue = value;
     }
 
     if(typeof callback === 'function') {
         options.hitCallback = function() {
             callback(null, 'sended');
-        }
+        };
     }
 
     ga(this.namespace + '.send', options);
@@ -103,7 +107,7 @@ uaTrackingJS.prototype.eCommerce = {
     generate: function(trackingJS, ec) {
         this.trackingJS = trackingJS;
         this.ec = ec;
-        if(ec.transaction.id && ec.transaction.id != '') {
+        if(ec.transaction.id && ec.transaction.id !== '') {
             //enable ecommerce
             ga(this.trackingJS.getNamespace() + '.require', 'ecommerce');
             this.addTransaction();
@@ -138,21 +142,21 @@ uaTrackingJS.prototype.eCommerce = {
     },
 
     /**
-     * @param callback
+     * @method  addItems
      */
-    addItems: function(callback) {
+    addItems: function() {
         $.each(this.ec.getItems(), function(key, item) {
-            if (item.id && item.name && item.id != '' && item.name != '') {
+            if (item.id && item.name && item.id !== '' && item.name !== '') {
                 var options = {
                     'id': item.id,
                     'name': item.name
                 };
 
-                if(item.sku && item.sku != '') {
-                    options.sku = item.sku
+                if(item.sku && item.sku !== '') {
+                    options.sku = item.sku;
                 }
 
-                if(item.category && item.category != '') {
+                if(item.category && item.category !== '') {
                     options.category = item.category;
                 }
 
@@ -195,4 +199,4 @@ uaTrackingJS.prototype.set = function(set) {
     if(typeof set === 'object') {
         ga(this.namespace + '.set', set);
     }
-}
+};

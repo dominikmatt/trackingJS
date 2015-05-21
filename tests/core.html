@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+</head>
+<body>
+    <link rel="shortcut icon" type="image/png" href="/jasmine/lib/jasmine-2.1.3/jasmine_favicon.png">
+    <link rel="stylesheet" type="text/css" href="/jasmine/lib/jasmine-2.1.3/jasmine.css">
+
+    <script type="text/javascript" src="/jasmine/lib/jasmine-2.1.3/jasmine.js"></script>
+    <script type="text/javascript" src="/jasmine/lib/jasmine-2.1.3/jasmine-html.js"></script>
+    <script type="text/javascript" src="/jasmine/lib/jasmine-2.1.3/boot.js"></script>
+
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script src="/scripts/adapter/ua.js"></script>
+    <script src="/scripts/tracking.js"></script>
+    <script src="/scripts/eventBundle/formBundle.js"></script>
+
+        <a href="#" data-trackingjs='{"event":"click", "category":"category", "action":"action", "label":"label", "value":"1"}'>click to send event</a>
+        <div data-trackingjs='{"event":"click", "category":"categoryDiv", "action":"actionDiv", "label":"labelDiv", "value":"2"}'>click to send event</div>
+
+    <script type="text/javascript">
+
+        var tracking = new trackingJS({
+                namespace: 'jasmine',
+                type: 'ua',
+                analyticsCode: 'UA-57009541-1',
+                url: 'auto',
+                pageview: false,
+                anonymizeIp: true,
+                eventBundles: ['form'],
+                formBundle: { 
+                    formEnableDataName: 'form-auto-track' //Default
+                }
+            });
+
+        describe("TrackingJS core", function() {
+            it("check if the bundle is loaded", function() {
+                expect(tracking.bundles.form.bundleName).toEqual('form');
+            });
+
+            it("check getSetting method", function() {
+                expect(tracking.getSetting('type')).toEqual('ua');
+            });
+
+            it("check the first initialized event", function() {
+                console.log(tracking.getEvents().html());
+                expect(tracking.getEvents().html())
+                    .toEqual(
+                        'click to send event'
+                    );
+            });
+
+            it("check if the namespace is correct set", function() {
+                expect(tracking.getNamespace()).toEqual('jasmine');
+            });
+
+        });
+    </script>
+</body>
+</html>
+
+
+
+

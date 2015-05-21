@@ -1,3 +1,27 @@
+# Development
+#### Step 1 - start  
+start server
+```bash
+grunt serve
+```
+
+#### Step 2 - development
+do it exactly
+
+#### Step 3 - create example
+create a example
+#### Step 4 - testing
+jshint
+```bash
+grunt jshint
+```
+http://localhost:3000/tests/ua.html  
+http://localhost:3000/tests/ecommerce.html  
+http://localhost:3000/tests/core.html  
+
+#### Step 5 - Doc
+create Documentation
+
 #USAGE
 
 ### Installation

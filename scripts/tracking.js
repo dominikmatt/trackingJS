@@ -1,5 +1,7 @@
-var trackingJS = function (options) {
+'use strict';
+/*global $ */
 
+var trackingJS = function (options) {
     this.tracking = null;
     this.registeredEvents = [];
 
@@ -8,7 +10,7 @@ var trackingJS = function (options) {
      *
      * @author Dominik Matt <dma@massiveart.com>
      */
-    var settings = $.extend({
+    this.settings = $.extend({
         namespace: 'namespace',
         type: 'ua',
         analyticsCode: '',
@@ -21,25 +23,25 @@ var trackingJS = function (options) {
         set: {}
     }, options);
 
+    var debug = this.settings.debug;
+
     /**
      * init
      *
      * @author Dominik Matt <dma@massiveart.com>
      */
     var init = function () {
-        this.namespace = settings.namespace;
-
-        checkDebug();
+        this.namespace = this.getSetting('namespace');
 
         loadAdapter();
         loadEventBundles();
 
-        if (this.tracking && typeof this.tracking == 'object') {
+        if (this.tracking && typeof this.tracking === 'object') {
             this.tracking.appendAnalyticsJs();
-            this.tracking.init(settings.namespace, settings.analyticsCode, settings.url);
-            this.setTrackingVars(settings.set);
+            this.tracking.init(this.namespace, this.getSetting('analyticsCode'), this.getSetting('url'));
+            this.setTrackingVars(this.getSetting('set'));
 
-            if(settings.pageview === true) {
+            if(this.getSetting('pageview') === true) {
                 this.tracking.pageview(options.name);
             }
             
@@ -47,35 +49,7 @@ var trackingJS = function (options) {
         } else {
             throw 'Tracking type not loaded';
         }
-
     }.bind(this);
-
-    /**
-     * @method getSetting
-     *
-     * @author Dominik Matt <dma@massiveart.com>
-     *
-     * @param key
-     * @returns {*}
-     */
-    this.getSetting = function (key) {
-        if (settings[key]) {
-            return settings[key];
-        }
-    };
-
-    /**
-     * set the debug param to true if has "#trackingJSDebug" is set in the url
-     *
-     * @method checkDebug
-     *
-     * @author Dominik Matt <dma@massiveart.com>
-     */
-    var checkDebug = function () {
-        if (location.hash == '#trackingJSDebug') {
-            settings.debug = true;
-        }
-    };
 
     /**
      * loadAdapter
@@ -83,10 +57,11 @@ var trackingJS = function (options) {
      * @author Dominik Matt <dma@massiveart.com>
      */
     var loadAdapter = function () {
-        if (settings.type != '') {
-            var className = settings.type + 'TrackingJS'
-            if (typeof window[className] == 'function') {
-                this.tracking = new window[className](settings, this.helper);
+        if (this.getSetting('type') !== '') {
+            var className = this.getSetting('type') + 'TrackingJS';
+
+            if (typeof window[className] === 'function') {
+                this.tracking = new window[className](this.settings, this.helper);
                 return true;
             }
         }
@@ -94,8 +69,35 @@ var trackingJS = function (options) {
         return false;
     }.bind(this);
 
+    /**
+     * @method loadEventBundles
+     * @type {*|function(this:trackingJS)}
+     */
+    var loadEventBundles = function() {
+        var eventBundles = this.getSetting('eventBundles');
 
+        if(typeof eventBundles === 'object' && eventBundles.length > 0) {
+            for(var key in eventBundles) {
+                var bundleName = eventBundles[key];
+                if(this.eventBundles[bundleName]) {
+                    var bundle = new this.eventBundles[bundleName]();
+                    bundle.init(this.tracking, this.settings);
+                    this.bundles[bundleName] = bundle;
+                }
+            }
+        }
+    }.bind(this);
+
+    /**
+     * @method helper
+     * @type {Object}
+     */
     this.helper = {
+        /**
+         * @method error
+         * @param  {string}  msg
+         * @param  {Boolean} isObject 
+         */
         error: function (msg, isObject) {
             if (isObject) {
                 console.error(msg);
@@ -104,8 +106,13 @@ var trackingJS = function (options) {
             }
         },
 
+        /**
+         * @method info
+         * @param  {string}  msg      [description]
+         * @param  {Boolean} isObject [description]
+         */
         info: function (msg, isObject) {
-            if (settings.debug) {
+            if (debug) {
                 if (isObject) {
                     console.info(msg);
                 } else {
@@ -116,81 +123,64 @@ var trackingJS = function (options) {
     };
 
 
-    /**
-     * get all registerd events
-     *
-     * @type {function(this:trackingJS)}
-     */
-    var getEvents = function () {
-        $events = $('*[data-' + settings.dataName + ']');
-        return $events;
-    }.bind(this);
+    init();
+};
 
-    /**
-     *
-     * @type {function(this:trackingJS)}
-     */
-    this.registerEvents = function () {
-        var $events = getEvents(),
-            data = null;
+/**
+ * @method getSetting
+ *
+ * @author Dominik Matt <dma@massiveart.com>
+ *
+ * @param {string} key
+ * @returns {mixed}
+ */
+trackingJS.prototype.getSetting = function (key) {
+    if (this.settings[key]) {
+        return this.settings[key];
+    }
 
-        // each all events
-        $events.each(function (key, el) {
-            var $el = $(el),
-                data = $el.data(settings.dataName);
+    return false;
+};
 
-            //check if data-trackingjs is a object and have a event (click, mouseover, touch)
-            if (typeof data == 'object' && data.event) {
+/**
+ * @method registerEvents
+ */
+trackingJS.prototype.registerEvents = function () {
+    var $events = this.getEvents();
 
-                //register event
-                this.registeredEvents.push($el);
-                $el.bind(data.event + '.trackingJS', function () {
-                    //get current data
-                    var sendData = $el.data(settings.dataName);
-                    if (!typeof sendData == 'object') {
-                        sendData = $.parseJSON(sendData);
-                    }
-                    this.event(sendData.category, sendData.action, sendData.label, sendData.value);
-                }.bind(this));
+    // each all events
+    $events.each(function (key, el) {
+        var $el = $(el),
+            data = $el.data(this.getSetting('dataName'));
 
+        //check if data-trackingjs is a object and have a event (click, mouseover, touch)
+        if (typeof data === 'object' && data.event) {
+            //register event
+            this.registeredEvents.push($el);
+            $el.bind(data.event + '.trackingJS', function () {
+                //get current data
+                var sendData = $el.data(this.getSetting('dataName'));
 
-            } else {
-                this.helper.info('Wrong data to register Tracking event.');
-            }
-
-        }.bind(this));
-    }.bind(this);
-
-    /**
-     * @method loadEventBundles
-     * @type {*|function(this:trackingJS)}
-     */
-    var loadEventBundles = function() {
-        if(settings.eventBundles && typeof settings.eventBundles == 'object' && settings.eventBundles.length > 0) {
-            for(var key in settings.eventBundles) {
-                var bundleName = settings.eventBundles[key];
-                if(this.eventBundles[bundleName]) {
-                    var bundle = new this.eventBundles[bundleName]();
-                    bundle.init(this.tracking, settings);
-                    this.bundles[bundleName] = bundle;
+                if (typeof sendData !== 'object') {
+                    sendData = $.parseJSON(sendData);
                 }
-            }
-        }
-    }.bind(this);
-
-    var initializeNewBundel = function (bundleName) {
-        if (this.eventBundles[bundleName + 'Bundle']) {
-            var bundle = new this.eventBundles[bundleName + 'Bundle']();
-            bundle.init(this, function($el) {
-                this.registeredEvents.push($el);
+                this.event(sendData.category, sendData.action, sendData.label, sendData.value);
             }.bind(this));
         } else {
-            this.helper.info('Bundle ' + bundleName + ' not found');
+            this.helper.info('Wrong data to register Tracking event.');
         }
-    }.bind(this);
+    }.bind(this));
+};
 
+/**
+ * get all registerd events
+ *
+ * @return {object} jquery element
+ */
+trackingJS.prototype.getEvents = function () {
+    var $events = $('*[data-' + this.getSetting('dataName') + ']');
 
-    init();
+    return $events;
 };
 
 /**
@@ -231,7 +221,7 @@ trackingJS.prototype.setTrackingVars = function(vars) {
  * @type {function(this:trackingJS)}
  */
 trackingJS.prototype.registerEcommerce = function () {
-    if (typeof this.eCommerce == 'function') {
+    if (typeof this.eCommerce === 'function') {
         this.helper.info('Register eCommerce tracking');
         return new this.eCommerce(this);
     } else {
@@ -254,13 +244,13 @@ trackingJS.prototype.viewAllEvents = function () {
         var $el = $(el),
             sendData = $el.data(this.getSetting('dataName'));
 
-        if (!typeof sendData == 'object') {
+        if (typeof sendData !== 'object') {
             sendData = $.parseJSON(sendData);
         }
 
         console.log('########## trackingJS event');
         console.log($el.context);
-        console.log('Send event on ' + sendData.event + ': ' + 'category: ' + sendData.category + ' / action: ' + sendData.action + ' / label: ' + sendData.label + ' / value: ' + sendData.value)
+        console.log('Send event on ' + sendData.event + ': ' + 'category: ' + sendData.category + ' / action: ' + sendData.action + ' / label: ' + sendData.label + ' / value: ' + sendData.value);
     }.bind(this));
 };
 
@@ -288,7 +278,6 @@ trackingJS.prototype.getNamespace = function () {
     return this.namespace;
 };
 
-
 /**
  * eCommerce plugin
  *
@@ -296,7 +285,10 @@ trackingJS.prototype.getNamespace = function () {
  * @author Dominik Matt <dma@massiveart.com>
  */
 trackingJS.prototype.eCommerce = function (trackingJS) {
-
+    /**
+     * transaction
+     * @type {Object}
+     */
     this.transaction = {
         'id': null,             // Transaction ID. Required.
         'affiliation': '',      // Affiliation or store name.
@@ -305,34 +297,70 @@ trackingJS.prototype.eCommerce = function (trackingJS) {
         'tax': null             // Tax.
     };
 
+    /**
+     * items
+     * @type {Array}
+     */
     this.items = [];
 
+    /**
+     * namespace
+     * @type {String}
+     */
     this.namepsace = '';
 
+    /**
+     * @method setNamespace
+     * @param {string} namepsace
+     */
     this.setNamespace = function (namepsace) {
         this.namepsace = namepsace;
     };
 
+    /**
+     * @method getNamespace
+     * @return {string} namepsace
+     */
     this.getNamespace = function () {
         return this.namepsace;
     };
 
+    /**
+     * @method setId
+     * @param {string} id
+     */
     this.setId = function (id) {
         this.transaction.id = id;
     };
 
+    /**
+     * @method setAffiliation
+     * @param {int} affiliation
+     */
     this.setAffiliation = function (affiliation) {
         this.transaction.affiliation = affiliation;
     };
 
+    /**
+     * @method setShipping
+     * @param {int} shipping
+     */
     this.setShipping = function (shipping) {
         this.transaction.shipping = shipping;
     };
 
+    /**
+     * @method setTax
+     * @param {int} tax
+     */
     this.setTax = function (tax) {
         this.transaction.tax = tax;
     };
 
+    /**
+     * @method getRevenue
+     * @return {int} total
+     */
     this.getRevenue = function () {
         var total = 0;
 
@@ -345,11 +373,15 @@ trackingJS.prototype.eCommerce = function (trackingJS) {
         return total;
     };
 
+    /**
+     * @method  addItem
+     * @param {object} item
+     */
     this.addItem = function (item) {
         trackingJS.helper.info('Add item to ecommerce:');
         trackingJS.helper.info(item, true);
 
-        if(typeof item == 'object') {
+        if(typeof item === 'object') {
             if(item.quantity > 0) {
                 this.items.push(item);
             }
@@ -361,7 +393,6 @@ trackingJS.prototype.eCommerce = function (trackingJS) {
     this.send = function () {
         trackingJS.tracking.eCommerce.generate(trackingJS, this);
     }.bind(this);
-
 };
 
 /**

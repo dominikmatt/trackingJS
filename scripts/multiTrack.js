@@ -1,10 +1,13 @@
+'use strict';
+/*global $ */
+
 var multiTrackJS = {
 
     instances: [],
     eCommerce: [],
 
     register: function(trackingJS) {
-        this.instances.push(trackingJS)
+        this.instances.push(trackingJS);
     },
 
     pageview: function(page, title) {

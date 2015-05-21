@@ -1,3 +1,6 @@
+'use strict';
+/*global $, trackingJS */
+
 /**
  * form Bundle
  *
@@ -8,7 +11,6 @@ trackingJS.prototype.eventBundles.form = function() {
 
     var tracking,
         settings = {};
-
 
     /**
      * @method init
@@ -33,7 +35,7 @@ trackingJS.prototype.eventBundles.form = function() {
         if(!settings.formBundle) {
             settings.formBundle = {
                 formEnableDataName: 'form-auto-track'
-            }
+            };
         }
     };
 
@@ -47,7 +49,7 @@ trackingJS.prototype.eventBundles.form = function() {
         var $form = $(event.currentTarget),
             data = getFormData($form);
 
-        if(typeof data.enabled != 'undefined') {
+        if(typeof data.enabled !== 'undefined') {
             trackNewsletterHandler($form);
             tracking.event(data.name, data.name + ' - Send success', 'Form: ' + data.name + ' send success');
         }
@@ -67,7 +69,9 @@ trackingJS.prototype.eventBundles.form = function() {
                 var $el = $(item),
                     name = $el.data('form-newsletter-name');
 
-                if(!name || name == '') name = data.name;
+                if(!name || name === '') {
+                    name = data.name;
+                }
 
                 this.newsletter.signup(name);
             }.bind(this));
@@ -81,8 +85,7 @@ trackingJS.prototype.eventBundles.form = function() {
      */
     this.send = function($form, callback) {
         var data = getFormData($form),
-            done = callback || function() {};
-
+            done = callback || $.noop;
         trackNewsletterHandler($form);
         tracking.event(data.name, data.name + ' - Send success', 'Form: ' + data.name + ' send success', null, done);
     };
@@ -110,7 +113,10 @@ trackingJS.prototype.eventBundles.form = function() {
          * @param callback
          */
         signup: function(name, callback) {
-            if(typeof callback != 'function') callback = function() {}
+            if(typeof callback !== 'function') {
+                callback = function() {};
+            }
+
             tracking.event('Newsletter', 'Newsletter - Sign-Up', 'Newsletter: '+ name + ' sign-up success', null, callback);
         },
 
@@ -121,7 +127,10 @@ trackingJS.prototype.eventBundles.form = function() {
          * @param callback
          */
         signupFailed: function(name, callback) {
-            if(typeof callback != 'function') callback = function() {}
+            if(typeof callback !== 'function') {
+                callback = function() {};
+            }
+
             tracking.event('Newsletter', 'Newsletter - Sign-Up', 'Newsletter: '+ name + ' sign-up failed', null, callback);
         },
 
@@ -132,7 +141,10 @@ trackingJS.prototype.eventBundles.form = function() {
          * @param callback
          */
         signoff: function(name, callback) {
-            if(typeof callback != 'function') callback = function() {}
+            if(typeof callback !== 'function') {
+                callback = function() {};
+            }
+
             tracking.event('Newsletter', 'Newsletter - Sign-Off', 'Newsletter: '+ name + ' sign-off', null, callback);
         }
     };
@@ -150,6 +162,6 @@ trackingJS.prototype.eventBundles.form = function() {
             };
 
         return data;
-    }
+    };
 
 };
