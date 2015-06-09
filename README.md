@@ -72,7 +72,11 @@ view debug messages
 
 ###anonymizeIp
 *Default*: (boolean) false  
-(boolean) false | on true the ip will be anonymous
+(boolean) false | on true the ip will be anonymous  
+
+###eventBundles:  
+*Default:* (array)    
+(array) | name of the bundles  
 
 ###set
 *Default*: (object) {}  
@@ -200,9 +204,9 @@ Include `eventBundle/bundleName.js` script:
 ```
 
 Add the option with all bundles on the Construct
-```
+```js
     eventBundles: ['auth', 'link', 'video']
-´´´
+```
 
 -> use the bundle
 
