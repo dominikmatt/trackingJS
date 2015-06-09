@@ -1,12 +1,9 @@
-<!DOCTYOE html>
+<!DOCTYPE html>
 <html>
 <head>
-
+    <title>linker / multidomain - TrackingJS</title>
 </head>
 <body>
-
-<a href="#" data-trackingjs='{"event":"click", "category":"category", "action":"action", "label":"label", "value":"1"}'>click to send event</a>
-<div data-trackingjs='{"event":"click", "category":"categoryDiv", "action":"actionDiv", "label":"labelDiv", "value":"2"}'>click to send event</div>
 
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 <script src="/example/js/bind.js"></script>
@@ -14,12 +11,18 @@
 <script src="/scripts/tracking.js"></script>
 <script type="text/javascript">
     var trackingJS = new trackingJS({
+        namespace: 'example',
         type: 'ua',
         analyticsCode: 'UA-57009541-1',
         url: 'auto',
         pageview: true,
-        debug: true
+        anonymizeIp: true,
+        uaConfig: {
+            allowLinker: true,
+            linkerDomains: ['localhost:3000', 'localhost:4000']
+        }
     });
+
 
 </script>
 </body>
