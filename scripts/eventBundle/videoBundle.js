@@ -57,7 +57,6 @@
          * @method playHandler
          */
         var playHandler = function() {
-            console.log(tracking);
             tracking.event(
                 'Video',
                 'Video - Play',
