@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>TrackingJS browserify</title>
+</head>
+<body>
+<!-- Bundle test -->
+<h2>Link-Bundle</h2>
+<a href="http://www.test.at">external link to same tab</a><br />
+<a href="http://www.test.at" target="_blank">external link to new tab</a><br />
+<a href="tel:0043664123456">Phone</a><br />
+<a href="mailto:test@test.at">Mailto</a>
+
+<h2>Form-Bundle</h2>
+<form data-form-auto-track data-form-name="Formular name" id="form">
+    <div class="input-wrap">
+        <label for="firstname">Firstname</label>
+        <input type="text" name="firstname" id="firstname" />
+    </div>
+    <div class="input-wrap">
+        <label for="Lastname">Lastname*</label>
+        <input type="text" name="lastname" id="lastname" />
+    </div>
+    <label><input type="checkbox" name="newsletter1" data-form-newsletter data-form-newsletter-name="Newsletter 1" /> Signup Newsletter1</label>
+    <label><input type="checkbox" name="newsletter2" data-form-newsletter data-form-newsletter-name="Newsletter 2" /> Signup Newsletter2</label>
+    <br />
+    <input type="submit" value="Submit" />
+</form>
+
+<h2>socialshare-Bundle</h2>
+<div data-type="share" data-platform="twitter">Twitter</div>
+<div data-type="share" data-platform="facebook">facebook</div>
+
+<script type="text/javascript" src="http://localhost:1337/livereload.js"></script>
+<script type="text/javascript" src="dist/main.js"></script>
+</body>
+</html>
