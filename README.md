@@ -146,7 +146,7 @@ var newEventData = {
 $('a').attr('data-trackingjs', JSON.stringify(newEventData));
 ```
 
-to update the event type (e.g. from click to mouseover) use the updateEvents command
+to update the event type (e.g. from click to mouseover) or initialize ajax loaded content use the updateEvents command
 ```js
 var newEventData = {
     event: 'mouseover',
