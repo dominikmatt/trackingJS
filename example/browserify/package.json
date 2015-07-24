@@ -1,0 +1,17 @@
+{
+  "name": "tracking-js-browserify-exemple",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "grunt": "^0.4.5",
+    "grunt-browserify": "^3.8.0",
+    "grunt-contrib-watch": "^0.6.1",
+    "grunt-notify": "^0.4.1"
+  }
+}
