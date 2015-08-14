@@ -2,7 +2,9 @@
   "name": "TrackingJS",
   "description": "Google Analytics TrackingJS",
   "author": "Dominik Matt <mail@matt-dominik.at>",
-  "dependencies": {},
+  "dependencies": {
+    "jshint-stylish": "^2.0.1"
+  },
   "devDependencies": {
     "express": "^4.10.4",
     "grunt": "^0.4.5",
