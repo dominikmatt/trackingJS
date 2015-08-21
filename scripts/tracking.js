@@ -1,7 +1,9 @@
 'use strict';
 /*global $ */
+window.trackingJSInstances = [];
 
 var trackingJS = function (options) {
+    this.version = '0.6.0';
     this.tracking = null;
     this.registeredEvents = [];
 
@@ -42,10 +44,11 @@ var trackingJS = function (options) {
             this.setTrackingVars(this.getSetting('set'));
 
             if(this.getSetting('pageview') === true) {
-                this.tracking.pageview(options.name);
+                this.tracking.pageview();
             }
             
             this.registerEvents();
+            window.trackingJSInstances.push(this);
         } else {
             throw 'Tracking type not loaded';
         }
