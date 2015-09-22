@@ -22,6 +22,12 @@ var multiTrackJS = {
         });
     },
 
+    updateEvents: function() {
+        $.each(this.instances, function(key, item) {
+            item.updateEvents();
+        });
+    },
+
     registerEcommerce: function() {
 
         this.eCommerceInstances =  [];
