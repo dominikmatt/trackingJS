@@ -156,8 +156,12 @@ trackingJS.prototype.registerEvents = function () {
         //check if data-trackingjs is a object and have a event (click, mouseover, touch)
         if (typeof data === 'object' && data.event) {
             //register event
-            this.registeredEvents.push($el);
-            $el.bind(data.event + '.trackingJS', function () {
+            this.registeredEvents.push({
+                $el: $el,
+                event: data.event
+            });
+
+            $el.bind(data.event + '.' + this.namespace + '.trackingJS', function () {
                 //get current data
                 var sendData = $el.data(this.getSetting('dataName'));
 
@@ -264,9 +268,20 @@ trackingJS.prototype.viewAllEvents = function () {
  * @type {function(this:trackingJS)}
  */
 trackingJS.prototype.updateEvents = function () {
-    //reset registered events
-    this.registeredEvents = [];
+    this.resetRegisteredEvents();
     this.registerEvents();
+};
+
+/**
+ * remove all reegistered events
+ * @method resetRegisteredEvents
+ */
+trackingJS.prototype.resetRegisteredEvents = function() {
+    $.each(this.registeredEvents, function(key, item) {
+        item.$el.unbind(item.event + '.' + this.namespace + '.trackingJS');
+    }.bind(this));
+
+    this.registeredEvents = [];
 };
 
 /**

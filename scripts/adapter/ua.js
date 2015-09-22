@@ -6,10 +6,20 @@ var uaTrackingJS = function(trackingJSOptions, trackingJSHelper) {
      * initialize
      */
     this.init = function (namespace, code, url) {
+        var uaConfig = $.extend({
+            allowLinker: false,
+            linkerDomains: false
+        }, trackingJSOptions.uaConfig);
+
         this.namespace = namespace;
+
         var options = {
-                name: namespace
-            };
+            name: namespace
+        };
+
+        if (!!uaConfig.allowLinker) {
+            options.allowLinker = uaConfig.allowLinker;
+        }
 
         ga('create', code, url, options);
 
@@ -19,6 +29,15 @@ var uaTrackingJS = function(trackingJSOptions, trackingJSHelper) {
         } else {
             trackingJSHelper.info(options.name + ' ip is not anonymous');
         }
+
+        if (!!uaConfig.allowLinker) {
+            ga(this.namespace + '.require', 'linker');
+
+            if (!!uaConfig.linkerDomains) {
+                ga(this.namespace + '.linker:autoLink', uaConfig.linkerDomains);
+            }
+        }
+
     }.bind(this);
 
     /**
