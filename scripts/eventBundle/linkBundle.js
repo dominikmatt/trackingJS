@@ -40,41 +40,44 @@ trackingJS.prototype.eventBundles.link = function() {
             target = $el.attr('target'),
             external = new RegExp('^((f|ht)tps?:)?//(?!' + location.host + ')');
 
-        // phone
-        if(/tel:/.test(href)) {
-            this.tracking.event(
-                'Contact',
-                'Contact - Click Tel',
-                'Tel:' + href.replace('tel:', '')
-            );
-            //mailto
-        } else if(/mailto:/.test(href)) {
-            this.tracking.event(
-                'Contact',
-                'Contact - Click Mail',
-                'E-Mail: ' + href.replace('mailto:', '')
-            );
-            //external link
-        } else if(external.test(href)){
-            //if the link is open in the same tab we wait for the event
-            if(target !== '_blank') {
+        // check if link always have a tracking-definition
+        if (!$el.data('trackingjs')) {
+            // phone
+            if (/tel:/.test(href)) {
                 this.tracking.event(
-                    'External Link',
-                    'External Link - Click',
-                    'External Link: ' + $el.text() + ' - Link: ' + href,
-                    null,
-                    function() {
-                        location.href = href;
-                    });
-
-                event.preventDefault();
-                return false;
-            } else {
-                this.tracking.event(
-                    'External Link',
-                    'External Link - Click',
-                    'External Link: ' + $el.text() + ' - Link: ' + href
+                    'Contact',
+                    'Contact - Click Tel',
+                    'Tel:' + href.replace('tel:', '')
                 );
+                //mailto
+            } else if (/mailto:/.test(href)) {
+                this.tracking.event(
+                    'Contact',
+                    'Contact - Click Mail',
+                    'E-Mail: ' + href.replace('mailto:', '')
+                );
+                //external link
+            } else if (external.test(href)) {
+                //if the link is open in the same tab we wait for the event
+                if (target !== '_blank') {
+                    this.tracking.event(
+                        'External Link',
+                        'External Link - Click',
+                        'External Link: ' + $el.text() + ' - Link: ' + href,
+                        null,
+                        function() {
+                            location.href = href;
+                        });
+
+                    event.preventDefault();
+                    return false;
+                } else {
+                    this.tracking.event(
+                        'External Link',
+                        'External Link - Click',
+                        'External Link: ' + $el.text() + ' - Link: ' + href
+                    );
+                }
             }
         }
     };
